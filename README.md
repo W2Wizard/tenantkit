@@ -8,49 +8,50 @@ This repository is a template for running a multi-tenant application with Svelte
 > This template is still in development, this readme is more so a place holder for later.
 
 ### Prerequisites
-- [Bun](https://bun.sh/) installed on your machine.
-- [Docker](https://www.docker.com/) installed for database containerization.
+
+-   [Bun](https://bun.sh/) installed on your machine.
+-   [Docker](https://www.docker.com/) installed for database containerization.
 
 ### Installation and Setup
 
 1. **Clone the Repository**
 
-   ```bash
-   git clone <repository-url>
-   cd <repository-folder>
-   ```
+    ```bash
+    git clone <repository-url>
+    cd <repository-folder>
+    ```
 
 2. **Start the Database**
 
-   Navigate to the `./docker/` folder and run the following command to spin up the database using Docker Compose:
+    Navigate to the `./docker/` folder and run the following command to spin up the database using Docker Compose:
 
-   ```bash
-   docker-compose up -d
-   ```
+    ```bash
+    docker-compose up -d
+    ```
 
 3. **Run the Development Server**
 
-   Start the development server with Bun:
+    Start the development server with Bun:
 
-   ```bash
-   bun run dev
-   ```
+    ```bash
+    bun run dev
+    ```
 
 4. **Run Database Migrations**
 
-   After the database is running, apply migrations for the landlord database:
+    After the database is running, apply migrations for the landlord database:
 
-   ```bash
-   bun run landlord:migrate
-   ```
+    ```bash
+    bun run landlord:migrate
+    ```
 
 5. **Seed the Landlord Database**
 
-   Seed the landlord database with initial data:
+    Seed the landlord database with initial data:
 
-   ```bash
-   bun run landlord:seed
-   ```
+    ```bash
+    bun run landlord:seed
+    ```
 
 ### Running Migrations for Tenants
 
@@ -58,20 +59,20 @@ After setting up the landlord, you can create tenants, and each tenant will run 
 
 ### Additional Commands
 
-- **Start Tenant-Specific Database**: Once a tenant is created, use tenant-specific migration commands similar to the landlord.
-- **Run in Production**: Use `bun run build` for building the project and start it with `bun run start`.
+-   **Start Tenant-Specific Database**: Once a tenant is created, use tenant-specific migration commands similar to the landlord.
+-   **Run in Production**: Use `bun run build` for building the project and start it with `bun run start`.
 
 ## Technologies Used
 
-- **[Bun](https://bun.sh/)**: A modern runtime for running JavaScript and TypeScript applications.
-- **[SvelteKit](https://kit.svelte.dev/)**: Reactive framework for building web applications.
-- **[Tailwind CSS](https://tailwindcss.com/)**: Utility-first CSS for styling.
-- **[ShadCN UI](https://ui.shadcn.dev/)**: UI component library for modern design.
-- **[Drizzle ORM](https://orm.drizzle.team/)**: Manage database schemas and migrations.
+-   **[Bun](https://bun.sh/)**: A modern runtime for running JavaScript and TypeScript applications.
+-   **[SvelteKit](https://kit.svelte.dev/)**: Reactive framework for building web applications.
+-   **[Tailwind CSS](https://tailwindcss.com/)**: Utility-first CSS for styling.
+-   **[ShadCN UI](https://ui.shadcn.dev/)**: UI component library for modern design.
+-   **[Drizzle ORM](https://orm.drizzle.team/)**: Manage database schemas and migrations.
 
 ## Notes
 
-- Be sure to run the Docker containers to set up the database correctly before starting the server.
-- Migrations and seeds are essential to configure the landlord's database before onboarding tenants.
+-   Be sure to run the Docker containers to set up the database correctly before starting the server.
+-   Migrations and seeds are essential to configure the landlord's database before onboarding tenants.
 
 Enjoy building your multi-tenant SvelteKit application with this template!

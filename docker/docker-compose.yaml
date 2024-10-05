@@ -1,13 +1,13 @@
 ---
 name: my-project-name
 services:
-  db:
-    container_name: ${APP_NAME:-myapp}_DB
-    image: postgres:16-alpine
-    restart: on-failure:5
-    environment:
-      POSTGRES_USER: ${DB_USER:-root}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
-      POSTGRES_DB: ${DB_NAME:-landlord}
-    ports:
-      - "${DB_PORT:-5432}:5432"
+    db:
+        container_name: ${APP_NAME:-myapp}_DB
+        image: postgres:16-alpine
+        restart: on-failure:5
+        environment:
+            POSTGRES_USER: ${DB_USER:-root}
+            POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+            POSTGRES_DB: ${DB_NAME:-landlord}
+        ports:
+            - "${DB_PORT:-5432}:5432"

@@ -19,7 +19,7 @@ const con = await connect(Bun.env.DB_URL);
 const tenantsList = await con.db.select().from(tenants);
 console.log("\nListing tenants:");
 for (const tenant of tenantsList) {
-    console.log(`[Seeding]:`, tenant.id, "@", tenant.domain);
+	console.log(`[Seeding]:`, tenant.id, "@", tenant.domain);
 	await Promise.all([SQLFunctions(con)]);
 }
 

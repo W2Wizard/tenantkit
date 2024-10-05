@@ -1,11 +1,10 @@
-
 // ============================================================================
 // W2Inc, Amsterdam 2024, All Rights Reserved.
 // See README in the root project for more information.
 // ============================================================================
-import { $ } from 'bun';
-import { input } from '@inquirer/prompts';
-import { connect } from './utils';
+import { $ } from "bun";
+import { input } from "@inquirer/prompts";
+import { connect } from "./utils";
 import { SQLFunctions } from "./utils/seed";
 
 // ============================================================================
