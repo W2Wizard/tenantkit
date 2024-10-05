@@ -1,38 +1,79 @@
-# create-svelte
+Certainly! Here's the updated README with references to each technology:
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+# SvelteKit Landlord Tenancy Template
 
-## Creating a project
+This repository is a template for running a multi-tenant application with SvelteKit, leveraging a landlord-tenant architecture where each tenant has its own isolated database. This approach ensures data security and separation for each client.
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Getting Started
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+> [!WARNING]  
+> This template is still in development, this readme is more so a place holder for later.
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+### Prerequisites
+- [Bun](https://bun.sh/) installed on your machine.
+- [Docker](https://www.docker.com/) installed for database containerization.
 
-## Developing
+### Installation and Setup
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+1. **Clone the Repository**
 
-```bash
-npm run dev
+   ```bash
+   git clone <repository-url>
+   cd <repository-folder>
+   ```
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+2. **Start the Database**
 
-## Building
+   Navigate to the `./docker/` folder and run the following command to spin up the database using Docker Compose:
 
-To create a production version of your app:
+   ```bash
+   docker-compose up -d
+   ```
 
-```bash
-npm run build
-```
+3. **Run the Development Server**
 
-You can preview the production build with `npm run preview`.
+   Start the development server with Bun:
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+   ```bash
+   bun run dev
+   ```
+
+4. **Run Database Migrations**
+
+   After the database is running, apply migrations for the landlord database:
+
+   ```bash
+   bun run landlord:migrate
+   ```
+
+5. **Seed the Landlord Database**
+
+   Seed the landlord database with initial data:
+
+   ```bash
+   bun run landlord:seed
+   ```
+
+### Running Migrations for Tenants
+
+After setting up the landlord, you can create tenants, and each tenant will run on its own database. Ensure that tenant migrations are applied appropriately using Drizzle ORM.
+
+### Additional Commands
+
+- **Start Tenant-Specific Database**: Once a tenant is created, use tenant-specific migration commands similar to the landlord.
+- **Run in Production**: Use `bun run build` for building the project and start it with `bun run start`.
+
+## Technologies Used
+
+- **[Bun](https://bun.sh/)**: A modern runtime for running JavaScript and TypeScript applications.
+- **[SvelteKit](https://kit.svelte.dev/)**: Reactive framework for building web applications.
+- **[Tailwind CSS](https://tailwindcss.com/)**: Utility-first CSS for styling.
+- **[ShadCN UI](https://ui.shadcn.dev/)**: UI component library for modern design.
+- **[Drizzle ORM](https://orm.drizzle.team/)**: Manage database schemas and migrations.
+
+## Notes
+
+- Be sure to run the Docker containers to set up the database correctly before starting the server.
+- Migrations and seeds are essential to configure the landlord's database before onboarding tenants.
+
+Enjoy building your multi-tenant SvelteKit application with this template!
