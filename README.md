@@ -1,5 +1,3 @@
-Certainly! Here's the updated README with references to each technology:
-
 # SvelteKit Landlord Tenancy Template
 
 This repository is a template for running a multi-tenant application with SvelteKit, leveraging a landlord-tenant architecture where each tenant has its own isolated database. This approach ensures data security and separation for each client.
