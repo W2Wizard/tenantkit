@@ -4,7 +4,7 @@
 // ============================================================================
 
 import postgres from "postgres";
-import { drizzle } from "drizzle-orm/postgres-js";
+import { drizzle, PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 
 /**
@@ -34,11 +34,16 @@ export async function addScriptToPackage(name: string, command: string) {
 	return true;
 }
 
+export type Connection = {
+	sql: postgres.Sql<{}>;
+	db: PostgresJsDatabase;
+};
+
 /**
  * Return the drizzle instance on a DB.
  * @param url The postgres URL
  */
-export async function connect(url: string) {
+export async function connect(url: string): Promise<Connection> {
 	const sql = postgres(url, {
 		max: 1,
 		onnotice(notice) {

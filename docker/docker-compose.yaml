@@ -1,4 +1,5 @@
-version: "3.8"
+---
+name: my-project-name
 services:
   db:
     container_name: ${APP_NAME:-myapp}_DB
