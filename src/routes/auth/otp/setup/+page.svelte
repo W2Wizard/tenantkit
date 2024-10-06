@@ -1,17 +1,17 @@
 <script lang="ts">
-	import Form from "@/components/form.svelte";
-	import { ShieldCheck } from "lucide-svelte/icons";
-	import { Button } from "@/components/ui/button/index";
-	import { Card } from "@/components/ui/card/index";
-	import { Checkbox } from "@/components/ui/checkbox/index";
-	import { Input } from "@/components/ui/input/index";
-	import { Separator } from "@/components/ui/separator/index";
-	import { Alert } from "@/components/ui/alert/index";
+import Form from "@/components/form.svelte";
+import { ShieldCheck } from "lucide-svelte/icons";
+import { Button } from "@/components/ui/button/index";
+import { Card } from "@/components/ui/card/index";
+import { Checkbox } from "@/components/ui/checkbox/index";
+import { Input } from "@/components/ui/input/index";
+import { Separator } from "@/components/ui/separator/index";
+import { Alert } from "@/components/ui/alert/index";
 
-	const { data } = $props();
-	let value = $state<string>("");
-	let checked = $state<boolean | "indeterminate" | undefined>(false);
-	let disabled = $derived<boolean>(value.length === 0);
+const { data } = $props();
+let value = $state<string>("");
+let checked = $state<boolean | "indeterminate" | undefined>(false);
+let disabled = $derived<boolean>(value.length === 0);
 </script>
 
 <Form method="post" class="max-w-sm">

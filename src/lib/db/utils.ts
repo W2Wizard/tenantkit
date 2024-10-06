@@ -28,9 +28,7 @@ export const declareTable = <
 	columns: TColumnsMap
 ) => {
 	return pgTable(name, {
-		id: uuid("id")
-			.default(sql`uuid_generate_v7()`)
-			.primaryKey(),
+		id: uuid("id").default(sql`uuid_generate_v7()`).primaryKey(),
 		createdAt: timestamp("created_at", { mode: "date", precision: 3 }).defaultNow().notNull(),
 		updatedAt: timestamp("updated_at", { mode: "date", precision: 3 })
 			.defaultNow()

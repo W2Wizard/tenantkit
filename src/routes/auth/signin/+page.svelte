@@ -1,11 +1,11 @@
 <script lang="ts">
-	import Form from "@/components/form.svelte";
-	import { Button } from "@/components/ui/button";
-	import { Input } from "@/components/ui/input";
-	import { Label } from "@/components/ui/label";
-	import { Separator } from "@/components/ui/separator/index";
+import Form from "@/components/form.svelte";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator/index";
 
-	const { data } = $props();
+const { data } = $props();
 </script>
 
 <div class="mx-auto grid w-[350px] gap-6">

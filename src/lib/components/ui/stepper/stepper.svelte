@@ -1,18 +1,18 @@
 <script lang="ts">
-	import type { Snippet } from "svelte";
+import type { Snippet } from "svelte";
 
-	interface Props {
-		steps: string[];
-		value: number;
+interface Props {
+	steps: string[];
+	value: number;
+}
+
+let { steps = [], value = $bindable(0) }: Props = $props();
+
+function goToStep(step: number) {
+	if (step >= 0 && step < steps.length) {
+		value = step;
 	}
-
-	let { steps = [], value = $bindable(0) }: Props = $props();
-
-	function goToStep(step: number) {
-		if (step >= 0 && step < steps.length) {
-			value = step;
-		}
-	}
+}
 </script>
 
 <div class="flex items-center">

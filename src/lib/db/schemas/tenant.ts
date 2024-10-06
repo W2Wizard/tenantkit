@@ -15,10 +15,7 @@ export const navigationItems = declareTable("navigation_items", {
 	groupId: uuid("group_id").references(() => navigationGroups.id),
 	order: integer("order"),
 	href: varchar("href", { length: 256 }).notNull(),
-	permissions: text("permissions")
-		.array()
-		.notNull()
-		.default(sql`'{}'::text[]`)
+	permissions: text("permissions").array().notNull().default(sql`'{}'::text[]`)
 });
 
 export const navigationGroups = declareTable("navigation_groups", {

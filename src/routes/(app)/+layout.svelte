@@ -1,34 +1,34 @@
 <script>
-	import CircleUser from "lucide-svelte/icons/circle-user";
-	import LineChart from "lucide-svelte/icons/linkedin";
-	import Package from "lucide-svelte/icons/package";
-	import Home from "lucide-svelte/icons/house";
-	import ShoppingCart from "lucide-svelte/icons/shopping-cart";
-	import Sun from "lucide-svelte/icons/sun";
-	import Moon from "lucide-svelte/icons/moon";
-	import Menu from "lucide-svelte/icons/menu";
-	import Package2 from "lucide-svelte/icons/package-2";
-	import Search from "lucide-svelte/icons/search";
-	import Users from "lucide-svelte/icons/users";
+import CircleUser from "lucide-svelte/icons/circle-user";
+import LineChart from "lucide-svelte/icons/linkedin";
+import Package from "lucide-svelte/icons/package";
+import Home from "lucide-svelte/icons/house";
+import ShoppingCart from "lucide-svelte/icons/shopping-cart";
+import Sun from "lucide-svelte/icons/sun";
+import Moon from "lucide-svelte/icons/moon";
+import Menu from "lucide-svelte/icons/menu";
+import Package2 from "lucide-svelte/icons/package-2";
+import Search from "lucide-svelte/icons/search";
+import Users from "lucide-svelte/icons/users";
 
-	import { Badge } from "$lib/components/ui/badge/index";
-	import { Button } from "$lib/components/ui/button/index";
-	import * as Card from "$lib/components/ui/card/index";
-	import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index";
-	import { Input } from "$lib/components/ui/input/index";
-	import * as Sheet from "$lib/components/ui/sheet/index";
-	import { toggleMode } from "mode-watcher";
-	import Form from "@/components/form.svelte";
+import { Badge } from "$lib/components/ui/badge/index";
+import { Button } from "$lib/components/ui/button/index";
+import * as Card from "$lib/components/ui/card/index";
+import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index";
+import { Input } from "$lib/components/ui/input/index";
+import * as Sheet from "$lib/components/ui/sheet/index";
+import { toggleMode } from "mode-watcher";
+import Form from "@/components/form.svelte";
 
-	const { children } = $props();
+const { children } = $props();
 
-	const navItems = [
-		{ href: "##", icon: Home, label: "Dashboard" },
-		{ href: "##", icon: ShoppingCart, label: "Orders", badge: 6 },
-		{ href: "##", icon: Package, label: "Products", active: true },
-		{ href: "##", icon: Users, label: "Customers" },
-		{ href: "##", icon: LineChart, label: "Analytics" }
-	];
+const navItems = [
+	{ href: "##", icon: Home, label: "Dashboard" },
+	{ href: "##", icon: ShoppingCart, label: "Orders", badge: 6 },
+	{ href: "##", icon: Package, label: "Products", active: true },
+	{ href: "##", icon: Users, label: "Customers" },
+	{ href: "##", icon: LineChart, label: "Analytics" }
+];
 </script>
 
 <div class="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">

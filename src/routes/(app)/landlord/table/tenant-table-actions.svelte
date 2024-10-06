@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { Ellipsis, Pen, Trash2, Filter, Banknote } from "lucide-svelte/icons";
-	import { Button } from "$lib/components/ui/button";
-	import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
+import { Ellipsis, Pen, Trash2, Filter, Banknote } from "lucide-svelte/icons";
+import { Button } from "$lib/components/ui/button";
+import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
 </script>
 
 <DropdownMenu.Root>

@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { Button } from "$lib/components/ui/button/index.js";
-	import * as Card from "$lib/components/ui/card/index.js";
-	import { Checkbox } from "$lib/components/ui/checkbox/index.js";
-	import { Input } from "$lib/components/ui/input/index.js";
+import { Button } from "$lib/components/ui/button/index.js";
+import * as Card from "$lib/components/ui/card/index.js";
+import { Checkbox } from "$lib/components/ui/checkbox/index.js";
+import { Input } from "$lib/components/ui/input/index.js";
 </script>
 
 <div class="flex flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10">
