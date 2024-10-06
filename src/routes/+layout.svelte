@@ -6,5 +6,5 @@ const { children } = $props();
 </script>
 
 <ModeWatcher />
-<Toaster theme={$mode} />
+<Toaster theme={$mode} duration={Infinity} />
 {@render children()}
