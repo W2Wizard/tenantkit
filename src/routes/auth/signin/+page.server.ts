@@ -9,13 +9,16 @@ import { Toasty } from "@/utils";
 import { users } from "@/db/schemas/shared";
 import { eq } from "drizzle-orm";
 import { dev } from "$app/environment";
+import { env } from "$env/dynamic/private";
 
 // ============================================================================
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user) return redirect(302, "/");
 	return {
-		tenant: locals.context.type
+		tenant: locals.context.type,
+		allowSignup: env.AUTH_SIGNUP && locals.context.type !== "landlord",
+		allowForget: env.AUTH_FORGOT && locals.context.type !== "landlord"
 	};
 };
 

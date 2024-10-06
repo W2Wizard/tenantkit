@@ -12,6 +12,7 @@ import { isWithinExpirationDate } from "oslo";
 import { useRetryAfter } from "@/server/limiter";
 import { Toasty } from "$lib/utils";
 import { eq } from "drizzle-orm";
+import { env } from "$env/dynamic/private";
 
 const limiter = useRetryAfter({
 	IP: [10, "h"],
@@ -21,6 +22,10 @@ const limiter = useRetryAfter({
 // ============================================================================
 
 export const load: PageServerLoad = async ({ url, locals }) => {
+	if (Boolean(env.AUTH_FORGOT) === false || locals.context.type === "landlord") {
+		error(404)
+	}
+
 	const tokenQuery = url.searchParams.get("token");
 	if (!url.searchParams.has("token") || !tokenQuery || tokenQuery.length !== RESET_TOKEN_LENGTH)
 		return { token: null };

@@ -1,11 +1,11 @@
 <script lang="ts">
-import Form from "@/components/form.svelte";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator/index";
+	import Form from "@/components/form.svelte";
+	import { Button } from "@/components/ui/button";
+	import { Input } from "@/components/ui/input";
+	import { Label } from "@/components/ui/label";
+	import { Separator } from "@/components/ui/separator/index";
 
-const { data } = $props();
+	const { data } = $props();
 </script>
 
 <div class="mx-auto grid w-[350px] gap-6">
@@ -33,15 +33,26 @@ const { data } = $props();
 		<div class="grid gap-2">
 			<div class="flex items-center">
 				<Label for="password">Password</Label>
-				<a href="/auth/forgot" class="ml-auto inline-block text-sm underline">
-					Forgot your password?
-				</a>
+				{#if data.allowForget}
+					<a href="/auth/forgot" class="ml-auto inline-block text-sm underline">
+						Forgot your password?
+					</a>
+				{/if}
 			</div>
-			<Input id="password" type="password" required minlength={6} maxlength={255} name="password" />
+			<Input
+				id="password"
+				type="password"
+				required
+				minlength={6}
+				maxlength={255}
+				name="password"
+			/>
 		</div>
-		<!-- <a href="/auth/signup" class="text-sm underline">
-			Don't have an account yet?
-		</a> -->
+		{#if data.allowSignup}
+			<a href="/auth/signup" class="text-sm underline">
+				Don't have an account yet?
+			</a>
+		{/if}
 		<Separator class="my-2"></Separator>
 		<Button type="submit" class="w-full">Login</Button>
 	</Form>

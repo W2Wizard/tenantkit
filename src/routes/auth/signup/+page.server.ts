@@ -4,17 +4,22 @@
 // ============================================================================
 
 import type { Actions, PageServerLoad } from "./$types";
-import { fail, redirect } from "@sveltejs/kit";
+import { error, fail, redirect } from "@sveltejs/kit";
 import { useRetryAfter } from "@/server/limiter";
 import { Toasty } from "@/utils";
 import { users } from "@/db/schemas/tenant";
 import { eq } from "drizzle-orm";
 import { generateIdFromEntropySize } from "lucia";
 import { dev } from "$app/environment";
+import { env } from "$env/dynamic/private";
 
 // ============================================================================
 
-export const load: PageServerLoad = async ({ locals }) => {};
+export const load: PageServerLoad = async ({ locals }) => {
+	if (Boolean(env.AUTH_SIGNUP) === false || locals.context.type === "landlord") {
+		error(404)
+	}
+};
 
 export const actions: Actions = {
 	default: async (event) => {
@@ -23,7 +28,8 @@ export const actions: Actions = {
 			return Toasty.fail(429, `Try again in ${check.retryAfter} seconds`);
 		}
 
-		const { request, cookies } = event;
+		const { request, cookies, locals } = event;
+		const { context } = locals;
 		const formData = await request.formData();
 		const email = formData.get("email")?.toString();
 		const password = formData.get("password")?.toString();
@@ -55,14 +61,14 @@ export const actions: Actions = {
 		await new Promise((resolve) => setTimeout(resolve, 25 + Math.random() * 400));
 
 		// Exists ?
-		if ((await landlord.select().from(users).where(eq(users.email, email))).length > 1) {
+		if ((await context.db.select().from(users).where(eq(users.email, email))).length > 1) {
 			return Toasty.fail(409, "Account with such an email already exists!");
 		}
 
-		const user = await landlord.transaction(async (tx) => {
+		const user = await context.db.transaction(async (tx) => {
 			const id = generateIdFromEntropySize(16);
 			const hash = await Bun.password.hash(password, "argon2id");
-			const user = await landlord
+			const user = await tx
 				.insert(users)
 				.values({
 					email,

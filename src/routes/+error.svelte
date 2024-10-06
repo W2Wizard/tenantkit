@@ -1,10 +1,12 @@
 <script lang="ts">
-import { page } from "$app/stores";
+	import { page } from "$app/stores";
 </script>
 
 <main class="error-page">
 	<h1>{$page.status}</h1>
-	<p>{$page.error?.message ?? "Something went wrong"}</p>
+	{#if $page.state !== 404}
+		<p>{$page.error?.message ?? "Something went wrong"}</p>
+	{/if}
 </main>
 
 <style>

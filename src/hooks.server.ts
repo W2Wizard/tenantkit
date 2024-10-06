@@ -35,6 +35,14 @@ const limiter = useRetryAfter({
 	IPUA: [60, "m"]
 });
 
+/**
+ * You can specify if a route requires authentication, by default every
+ * route requires it. But you can overwrite the behaviour here.
+ */
+const routes: Record<string, boolean> = {
+	"/demo": false
+}
+
 // ============================================================================
 
 /**
@@ -99,18 +107,25 @@ export const handleAuth: Handle = async ({ event, resolve }) => {
 		"x-application": APP_NAME
 	});
 
+
 	// Verify session
 	const { lucia } = event.locals.context;
 	const sessionId = event.cookies.get(lucia.sessionCookieName);
 	if (!sessionId) {
 		event.locals.user = null;
 		event.locals.session = null;
+
+		// Allow non-authenticated access if the route doesn't require authentication
+		if (routes[event.url.pathname] === false) {
+			return resolve(event);
+		}
+
+		// If route requires authentication and no session exists, redirect to signin
 		if (event.url.pathname.startsWith("/auth")) return resolve(event);
 		return redirect(301, "/auth/signin");
 	}
 
 	// Validate & Create session
-	// NOTE(W2): Comon place to fail if docker / pg is dead.
 	const [r, e] = await ensure(lucia.validateSession(sessionId));
 	if (e) error(503, e.message);
 
@@ -140,10 +155,10 @@ export const handleAuth: Handle = async ({ event, resolve }) => {
 		redirect(303, "/landlord");
 	}
 
-	// Authenticated!
 	event.locals.user = user;
 	event.locals.session = session;
 	return resolve(event);
 };
+
 
 export const handle = sequence(handleTenant, handleAuth);
