@@ -23,7 +23,7 @@ if (!(await confirm({ message: "Are you sure you want to apply the migration?" }
 
 if (await confirm({ message: "Are you REALLY SURE!" })) {
 	const { db, sql } = await connect(Bun.env.DB_URL);
-	await migrate(db, { migrationsFolder: "drizzle/tenant" });
+	await migrate(db, { migrationsFolder: "drizzle/landlord" });
 	await sql.end();
 }
 

@@ -4,7 +4,7 @@ This repository is a template for running a multi-tenant application with Svelte
 
 ## Getting Started
 
-> [!WARNING]  
+> [!WARNING]
 > This template is still in development, this readme is more so a place holder for later.
 
 ### Prerequisites
@@ -15,29 +15,36 @@ This repository is a template for running a multi-tenant application with Svelte
 ### Installation and Setup
 
 1. **Clone the Repository**
-
-    ```bash
-    git clone <repository-url>
-    cd <repository-folder>
-    ```
+```bash
+git clone <repository-url>
+cd <repository-folder>
+```
 
 2. **Start the Database**
+Navigate to the `./docker/` folder and run the following command to spin up the database using Docker Compose:
+```bash
+docker-compose up -d
+```
 
-    Navigate to the `./docker/` folder and run the following command to spin up the database using Docker Compose:
+3. Generate your first migration
+In order for the database to have the current schema run:
+```bash
+# Generate a initial migration
+bun run landlord:migration
+# Seed the database with utility functions and stuff
+bun run landlord:seed
+# Apply all or the current migration
+# NOTE: You can pass any of drizzles arguments to migrate (e.g: --name "xyz")
+bun run landlord:migrate
+```
 
-    ```bash
-    docker-compose up -d
-    ```
+1. **Run the Development Server**
+Start the development server with Bun:
+```bash
+bun run dev
+```
 
-3. **Run the Development Server**
-
-    Start the development server with Bun:
-
-    ```bash
-    bun run dev
-    ```
-
-4. **Run Database Migrations**
+1. **Run Database Migrations**
 
     After the database is running, apply migrations for the landlord database:
 
@@ -45,7 +52,7 @@ This repository is a template for running a multi-tenant application with Svelte
     bun run landlord:migrate
     ```
 
-5. **Seed the Landlord Database**
+2. **Seed the Landlord Database**
 
     Seed the landlord database with initial data:
 

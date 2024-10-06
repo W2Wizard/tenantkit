@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "seed": "bun --bun run ./scripts/seed.ts",
+    "landlord:seed": "bun --bun run ./scripts/seed.ts",
     "tenant:seed": "bun --bun run ./scripts/tenant-seed.ts",
     "make:tenant": "bun --bun run ./scripts/make-tenant.ts",
     "tenants:list": "bun --bun run ./scripts/tenants-list.ts",
@@ -24,6 +24,7 @@
     "db:studio": "bun --bun run drizzle-kit studio --port 3000 --host 0.0.0.0 --verbose"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.3",
     "@faker-js/faker": "^8.4.1",
     "@inquirer/prompts": "^6.0.1",
     "@sveltejs/adapter-auto": "^3.2.5",
