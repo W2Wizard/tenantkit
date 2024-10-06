@@ -41,7 +41,7 @@ const limiter = useRetryAfter({
  */
 const routes: Record<string, boolean> = {
 	"/demo": false
-}
+};
 
 // ============================================================================
 
@@ -107,7 +107,6 @@ export const handleAuth: Handle = async ({ event, resolve }) => {
 		"x-application": APP_NAME
 	});
 
-
 	// Verify session
 	const { lucia } = event.locals.context;
 	const sessionId = event.cookies.get(lucia.sessionCookieName);
@@ -159,6 +158,5 @@ export const handleAuth: Handle = async ({ event, resolve }) => {
 	event.locals.session = session;
 	return resolve(event);
 };
-
 
 export const handle = sequence(handleTenant, handleAuth);

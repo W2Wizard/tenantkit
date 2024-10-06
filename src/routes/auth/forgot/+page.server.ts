@@ -23,7 +23,7 @@ const limiter = useRetryAfter({
 
 export const load: PageServerLoad = async ({ url, locals }) => {
 	if (Boolean(env.AUTH_FORGOT) === false || locals.context.type === "landlord") {
-		error(404)
+		error(404);
 	}
 
 	const tokenQuery = url.searchParams.get("token");

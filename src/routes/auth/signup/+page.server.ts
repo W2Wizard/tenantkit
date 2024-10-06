@@ -17,7 +17,7 @@ import { env } from "$env/dynamic/private";
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (Boolean(env.AUTH_SIGNUP) === false || locals.context.type === "landlord") {
-		error(404)
+		error(404);
 	}
 };
 

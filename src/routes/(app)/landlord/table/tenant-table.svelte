@@ -56,9 +56,10 @@ const columns = table.createColumns([
 		}
 	}),
 	table.column({
-		accessor: () => {},
+		accessor: (item) => item,
 		header: "",
-		cell: () => createRender(DataTableActions, {}),
+		//@ts-ignore Wait for svelte 5 release
+		cell: ({ value }) => createRender(DataTableActions, { selected: value }),
 		plugins: {
 			sort: {
 				disable: true

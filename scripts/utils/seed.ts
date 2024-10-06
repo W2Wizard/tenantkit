@@ -9,7 +9,7 @@ import postgres from "postgres";
 import { join } from "node:path";
 import { readdir } from "node:fs/promises";
 import { tenants } from "../../src/lib/db/schemas/landlord";
-import { Connection } from ".";
+import { type Connection } from ".";
 
 // SQL Scripts
 // ============================================================================

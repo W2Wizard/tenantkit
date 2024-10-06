@@ -2,6 +2,10 @@
 import { Ellipsis, Pen, Trash2, Filter, Banknote } from "lucide-svelte/icons";
 import { Button } from "$lib/components/ui/button";
 import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
+import type { TenantsType } from "@/db/schemas/landlord";
+import { tenant } from "../state.svelte";
+
+const { selected }: { selected: TenantsType } = $props();
 </script>
 
 <DropdownMenu.Root>
@@ -16,7 +20,7 @@ import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
 		</Button>
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="w-[180px]" align="end">
-		<DropdownMenu.Item on:click={() => console.log("123")}>
+		<DropdownMenu.Item on:click={() => ($tenant = selected)}>
 			Edit
 			<DropdownMenu.Shortcut>
 				<Pen class="size-4" />
