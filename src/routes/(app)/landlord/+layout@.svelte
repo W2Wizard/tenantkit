@@ -82,7 +82,7 @@ const { children } = $props();
 					</Button>
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content align="end">
-					<DropdownMenu.Label>My Account</DropdownMenu.Label>
+					<DropdownMenu.Label>Landlord</DropdownMenu.Label>
 					<DropdownMenu.Separator />
 					<form action="/auth/logout" method="post">
 						<DropdownMenu.Item inset class="p-0">

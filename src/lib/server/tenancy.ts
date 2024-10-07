@@ -9,7 +9,13 @@ import { tenants } from "@/db/schemas/landlord";
 import type { UsersType } from "@/db/schemas/shared";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import { drizzle, type PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import { DB_HOST, DB_PASSWORD, DB_PORT, DB_URL, DB_USER } from "$env/static/private";
+import {
+	DB_HOST,
+	DB_PASSWORD,
+	DB_PORT,
+	DB_URL,
+	DB_USER,
+} from "$env/static/private";
 import postgres from "postgres";
 
 // Types
@@ -44,24 +50,17 @@ namespace Tenants {
 	 */
 	export async function create(ctx: LandlordContext, name: string) {
 		const dbName = `tenant_${name.toLowerCase()}`;
-		const conTen = await connect(DB_URL);
+		const tenantURL = `postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${dbName}`;
 
-		await conTen.db.execute(sql.raw(`CREATE DATABASE ${dbName}`)).then(async () => {
-			const tenantURL = `postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${dbName}`;
-
-			await conTen.db.insert(tenants).values({
-				domain: `${name}.localhost`,
-				dbUri: tenantURL,
-			});
-
-			await new Promise((resolve) => setTimeout(resolve, 10 * 1000));
-
-			const { db, pg } = await connect(tenantURL);
-			await migrate(db, { migrationsFolder: "drizzle/tenant" });
-			await pg.end();
+		await ctx.db.execute(sql`CREATE DATABASE ${sql.raw(dbName)}`);
+		await ctx.db.insert(tenants).values({
+			domain: `${name}.localhost`,
+			dbUri: tenantURL,
 		});
 
-		await conTen.pg.end();
+		const { db, pg } = await connect(tenantURL);
+		await migrate(db, { migrationsFolder: "drizzle/tenant" });
+		await pg.end();
 	}
 
 	/**

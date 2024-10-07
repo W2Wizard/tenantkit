@@ -4,11 +4,12 @@ import { tenants } from "@/db/schemas/landlord";
 import Tenants from "@/server/tenancy";
 import { ensure, Toasty } from "@/utils";
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals, depends }) => {
 	if (locals.context.type === "tenant") error(404);
 
-	const { db } = locals.context;
+	depends('landlord:tenants');
 
+	const { db } = locals.context;
 	return {
 		tenants: db.select().from(tenants)
 	};
@@ -21,7 +22,8 @@ export const actions: Actions = {
 			error(429, `Try again in ${check.retryAfter} seconds`);
 		}
 
-		const { request, cookies, locals } = event;
+		const { request, locals } = event;
+		const { context } = locals;
 		const formData = await request.formData();
 		const name = formData.get("name")?.toString();
 
@@ -29,11 +31,11 @@ export const actions: Actions = {
 			return Toasty.fail(400, "Invalid name");
 		}
 
-		if (locals.context.type !== "landlord") {
+		if (context.type !== "landlord") {
 			error(401);
 		}
 
-		const [r, e] = await ensure(Tenants.create(locals.context, name));
+		const [r, e] = await ensure(Tenants.create(context, name));
 		if (e)
 			return Toasty.fail(400, e.message);
 		return Toasty.success("Tenant created")

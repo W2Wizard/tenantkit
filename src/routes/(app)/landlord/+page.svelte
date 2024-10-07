@@ -1,17 +1,5 @@
 <script lang="ts">
-import File from "lucide-svelte/icons/file";
-import Home from "lucide-svelte/icons/house";
-import LineChart from "lucide-svelte/icons/chart-bar";
-import ListFilter from "lucide-svelte/icons/list-filter";
-import Ellipsis from "lucide-svelte/icons/ellipsis";
-import Package from "lucide-svelte/icons/package";
-import Package2 from "lucide-svelte/icons/package-2";
-import PanelLeft from "lucide-svelte/icons/panel-left";
-import CirclePlus from "lucide-svelte/icons/circle-plus";
-import Search from "lucide-svelte/icons/search";
-import Settings from "lucide-svelte/icons/settings";
-import ShoppingCart from "lucide-svelte/icons/shopping-cart";
-import UsersRound from "lucide-svelte/icons/users-round";
+import { CirclePlus, File, UsersRound, MessageSquareWarning } from "lucide-svelte/icons";
 
 import { Badge } from "$lib/components/ui/badge/index.js";
 import { Button } from "$lib/components/ui/button/index.js";
@@ -32,6 +20,8 @@ import { Label } from "@/components/ui/label";
 import * as Popover from "@/components/ui/popover";
 import Form from "@/components/form.svelte";
 import Separator from "@/components/ui/separator/separator.svelte";
+	import { invalidate } from "$app/navigation";
+	import * as Alert from "@/components/ui/alert";
 
 const { data } = $props();
 
@@ -52,7 +42,7 @@ const loadTenants = async () => ($tenants = await Promise.resolve(data.tenants))
 			</Button>
 			</Popover.Trigger>
 			<Popover.Content class="w-80">
-				<Form class="grid gap-4">
+				<Form class="grid gap-4" onResult={async() => await invalidate("landlord:tenants")}>
 					<div class="space-y-2">
 				 		<h4 class="font-medium leading-none">Tenant</h4>
 				 		<p class="text-muted-foreground text-sm">
@@ -89,14 +79,32 @@ const loadTenants = async () => ($tenants = await Promise.resolve(data.tenants))
 				</div>
 			</div>
 		{:then _}
-			<TenantTable></TenantTable>
+			{#if $tenants.length <= 0}
+			<Alert.Root variant="info">
+				<UsersRound class="size-4" />
+				<Alert.Title>No tenants</Alert.Title>
+				<Alert.Description>
+					At the moment you have no available tenants to manage. Feel free to add one.
+				</Alert.Description>
+			</Alert.Root>
+			{:else}
+				<TenantTable></TenantTable>
+			{/if}
 		{:catch error}
 			<p>Something went wrong: {error.message}</p>
+			<Alert.Root variant="warning">
+				<MessageSquareWarning class="size-4" />
+				<Alert.Title>Something went wrong</Alert.Title>
+				<Alert.Description>
+					{error.message}
+				</Alert.Description>
+			</Alert.Root>
 		{/await}
 	</Card.Content>
 </Card.Root>
 
-<Sheet.Root open={$tenant !== null} onOpenChange={(v) =>  $tenant  = v ? $tenant : null}>
+<!-- Edit tenant sheet -->
+<Sheet.Root open={$tenant !== null} onOpenChange={(v) => $tenant = v ? $tenant : null}>
   <Sheet.Content side="left">
     <Sheet.Header>
       <Sheet.Title>Edit profile</Sheet.Title>
@@ -105,14 +113,16 @@ const loadTenants = async () => ($tenants = await Promise.resolve(data.tenants))
       </Sheet.Description>
     </Sheet.Header>
     <div class="grid gap-4 py-4">
-      <div class="grid grid-cols-4 items-center gap-4">
-        <Label for="name" class="text-right">Name</Label>
-        <Input id="name" value={$tenant!.id} class="col-span-3" />
-      </div>
-      <div class="grid grid-cols-4 items-center gap-4">
-        <Label for="username" class="text-right">Username</Label>
-        <Input id="username" value="@peduarte" class="col-span-3" />
-      </div>
+			{#if $tenant}
+				<div class="grid grid-cols-4 items-center gap-4">
+					<Label for="id" class="text-right">Id</Label>
+					<Input id="id" name="id" readonly value={$tenant.id} class="col-span-3" />
+				</div>
+				<div class="grid grid-cols-4 items-center gap-4">
+					<Label for="domain" class="text-right">Domain</Label>
+					<Input id="domain" name="domain" value={$tenant.domain} class="col-span-3" />
+				</div>
+			{/if}
     </div>
     <Sheet.Footer>
       <Sheet.Close asChild let:builder>
