@@ -4,7 +4,7 @@
 // ============================================================================
 
 import Tenants from "@/server/tenancy";
-import { createLucia } from "$lib/server/auth";
+import { Auth, createLucia } from "$lib/server/auth";
 import TTLCache from "@isaacs/ttlcache";
 import { redirect, type Handle, error, type RequestEvent } from "@sveltejs/kit";
 import { drizzle } from "drizzle-orm/postgres-js";
@@ -16,6 +16,8 @@ import * as tenantSchema from "@/db/schemas/tenant";
 import * as landlordSchema from "@/db/schemas/landlord";
 import { ensure } from "@/utils";
 import { sequence } from "@sveltejs/kit/hooks";
+import { env } from "$env/dynamic/private";
+import { createClient } from "@redis/client";
 
 // Configs
 // ============================================================================
@@ -43,6 +45,57 @@ const routes: Record<string, boolean> = {
 	"/demo": false
 };
 
+const redis = createClient({ url: env.REDIS_URL });
+await redis.connect();
+
+// ============================================================================
+
+export const handleRedis: Handle = async ({ event, resolve }) => {
+	const { url } = event;
+
+	if (url.pathname.startsWith("/auth")) return resolve(event);
+
+	// Create a unique key to store the page in the
+	// cache. I'm using "rendered" to differentiate
+	// entries from other data in Redis and the "v1"
+	// will allow invalidating the entire cache if
+	// the application code will change rendering.
+	// For a blog, I don't want to alter the cache
+	// on every querystring parameter otherwise it
+	// reduces the cache hit-rate due to parameters
+	// other sites may add (such as "fbclid").
+	const key = `rendered:v1:${url.pathname}`;
+
+	// ideally this is the only network request that
+	// we make ... it will return an empty object if
+	// the page wasn't cached or a populated object
+	// containing body and headers
+	let cached = await redis.hGetAll(key);
+	if (!cached.body) {
+		// if it wasn't cached, we render the pages
+		const response = await resolve(event);
+
+		// then convert it into a cachable object
+		cached = Object.fromEntries(response.headers.entries());
+		cached.body = await response.text();
+
+		if (response.status === 200) {
+			// and write it to the Redis cache ...
+			// NOTE: although this returns a promise
+			// we don't await it, so we don't delay
+			// returning the response to the client
+			// (the cache write is "fire and forget")
+			redis.hSet(key, cached);
+		}
+	}
+
+	// we end up here with the same object whether
+	// it came from the cache or was rendered fresh
+	// and we just return it as the response
+	const { body, ...headers } = cached;
+	return new Response(body, { headers: new Headers(headers) });
+};
+
 // ============================================================================
 
 /**
@@ -54,9 +107,7 @@ const handleTenant: Handle = async ({ event, resolve }) => {
 	const retrieveContext = (key: string, uri: string, type: "landlord" | "tenant") => {
 		if (!connections.has(key)) {
 			const schema =
-				type === "landlord"
-					? { ...landlordSchema, ...sharedSchema }
-					: { ...tenantSchema, ...sharedSchema };
+				type === "landlord" ? { ...landlordSchema, ...sharedSchema } : { ...tenantSchema, ...sharedSchema };
 
 			// NOTE(W2): This is technically correct. Retrieve context can be used for both
 			const db = drizzle(postgres(uri, { max: 24 }), { schema }) as LandlordDB | TenantDB;
@@ -64,8 +115,7 @@ const handleTenant: Handle = async ({ event, resolve }) => {
 			connections.set(key, {
 				type,
 				db,
-				domain: event.url.hostname,
-				lucia: createLucia(db, event.url.hostname)
+				domain: event.url.hostname
 			});
 		}
 		return connections.get(key)!;
@@ -108,9 +158,8 @@ export const handleAuth: Handle = async ({ event, resolve }) => {
 	});
 
 	// Verify session
-	const { lucia } = event.locals.context;
-	const sessionId = event.cookies.get(lucia.sessionCookieName);
-	if (!sessionId) {
+	const token = event.cookies.get(Auth.SESSION_COOKIE) ?? null;
+	if (!token) {
 		event.locals.user = null;
 		event.locals.session = null;
 
@@ -118,31 +167,26 @@ export const handleAuth: Handle = async ({ event, resolve }) => {
 		if (routes[event.url.pathname] === false) {
 			return resolve(event);
 		}
-
+		// User is trying to sign in.
+		if (event.url.pathname.startsWith("/auth")) {
+			return resolve(event);
+		}
 		// If route requires authentication and no session exists, redirect to signin
-		if (event.url.pathname.startsWith("/auth")) return resolve(event);
 		return redirect(301, "/auth/signin");
 	}
 
 	// Validate & Create session
-	const [r, e] = await ensure(lucia.validateSession(sessionId));
+	const [r, e] = await ensure(Auth.validateSessionToken(event.locals.context, token));
 	if (e) error(503, e.message);
-
 	const { session, user } = r;
-	if (session && session.fresh) {
-		const sessionCookie = lucia.createSessionCookie(session.id);
-		event.cookies.set(sessionCookie.name, sessionCookie.value, {
-			path: "/",
-			domain: event.locals.context.domain,
-			...sessionCookie.attributes
-		});
-	}
-	if (!session) {
-		const sessionCookie = lucia.createBlankSessionCookie();
-		event.cookies.set(sessionCookie.name, sessionCookie.value, {
-			path: "/",
-			...sessionCookie.attributes
-		});
+
+	if (session !== null) {
+		Auth.setCookie(event.cookies, token, session.expiresAt, event.locals.context.domain);
+
+		event.locals.user = user;
+		event.locals.session = session;
+	} else {
+		Auth.deleteCookie(event.cookies);
 	}
 
 	// Landlord application must only have access to the landlord route
@@ -154,9 +198,14 @@ export const handleAuth: Handle = async ({ event, resolve }) => {
 		redirect(303, "/landlord");
 	}
 
-	event.locals.user = user;
-	event.locals.session = session;
 	return resolve(event);
 };
 
+/**
+ * The order of these things IS important!
+ *
+ * 1. Determine which tenant we're connecting to...
+ * 2. Handle any sort of authentication...
+ * 3. Handle redis cache...
+ */
 export const handle = sequence(handleTenant, handleAuth);

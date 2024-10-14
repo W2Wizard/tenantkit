@@ -20,10 +20,7 @@ import jwt from "jsonwebtoken";
  * @param columns Any other additional columns to be defined.
  * @returns A new PGTable
  */
-export const declareTable = <
-	TTableName extends string,
-	TColumnsMap extends Record<string, PgColumnBuilderBase>
->(
+export const declareTable = <TTableName extends string, TColumnsMap extends Record<string, PgColumnBuilderBase>>(
 	name: TTableName,
 	columns: TColumnsMap
 ) => {

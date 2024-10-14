@@ -7,7 +7,7 @@ import { ensure, Toasty } from "@/utils";
 export const load: PageServerLoad = async ({ locals, depends }) => {
 	if (locals.context.type === "tenant") error(404);
 
-	depends('landlord:tenants');
+	depends("landlord:tenants");
 
 	const { db } = locals.context;
 	return {
@@ -36,8 +36,7 @@ export const actions: Actions = {
 		}
 
 		const [r, e] = await ensure(Tenants.create(context, name));
-		if (e)
-			return Toasty.fail(400, e.message);
-		return Toasty.success("Tenant created")
+		if (e) return Toasty.fail(400, e.message);
+		return Toasty.success("Tenant created");
 	}
-}
+};

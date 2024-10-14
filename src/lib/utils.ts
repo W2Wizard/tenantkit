@@ -123,10 +123,7 @@ export async function useFileReader(file: File) {
 }
 
 export namespace API {
-	export async function fetchy<T = unknown>(
-		route: string,
-		init?: RequestInit & { fetch?: typeof fetch }
-	) {
+	export async function fetchy<T = unknown>(route: string, init?: RequestInit & { fetch?: typeof fetch }) {
 		const fetchy = init?.fetch ?? fetch;
 		const response = await fetchy(route, {
 			signal: AbortSignal.timeout(1000),

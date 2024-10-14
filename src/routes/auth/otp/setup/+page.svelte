@@ -21,7 +21,7 @@ let disabled = $derived<boolean>(value.length === 0);
 				{data.secret}
 			</p>
 		{:else}
-			<img class="rounded-lg" src={data.qr} alt="A QR Code" />
+			{@html data.qr}
 		{/if}
 		<div class="flex items-center space-x-2">
 			<Checkbox id="terms" bind:checked />

@@ -5,6 +5,7 @@ import { TOTPController } from "oslo/otp";
 import { eq } from "drizzle-orm";
 import { Toasty } from "@/utils";
 import { users } from "@/db/schemas/shared";
+import { Auth } from "@/server/auth";
 
 export const load: PageServerLoad = async ({ locals, cookies }) => {
 	const userId = cookies.get("identity");
@@ -27,6 +28,8 @@ export const actions: Actions = {
 		}
 
 		const { locals, cookies, request } = event;
+		const { db } = locals.context;
+
 		const userId = cookies.get("identity");
 		if (!userId) {
 			error(401, "Unauthorized");
@@ -39,8 +42,9 @@ export const actions: Actions = {
 			error(401, "Unauthorized");
 		}
 
-		const result = await locals.context.db.select().from(users).where(eq(users.id, userId));
-		const user = result.at(0);
+		const user = await db.query.users.findFirst({
+			where: eq(users.id, userId)
+		});
 
 		if (!user || user.id !== userId) {
 			cookies.delete("identity", { path: "/" });
@@ -54,14 +58,10 @@ export const actions: Actions = {
 		if (await new TOTPController().verify(otp, decodeHex(user.tfa))) {
 			cookies.delete("identity", { path: "/" });
 
-			const session = await locals.context.lucia.createSession(userId, {});
-			const sessionCookie = locals.context.lucia.createSessionCookie(session.id);
-			cookies.set(sessionCookie.name, sessionCookie.value, {
-				path: "/",
-				...sessionCookie.attributes
-			});
-
-			redirect(303, event.locals.context.type === "landlord" ? "/landlord" : "/");
+			const token = Auth.generateSessionToken();
+			await Auth.createSession(event.locals.context, token, userId);
+			Auth.setCookie(cookies, token);
+			return redirect(301, event.locals.context.type === "landlord" ? "/landlord" : "/");
 		} else {
 			return Toasty.fail(400, "Invalid OTP");
 		}

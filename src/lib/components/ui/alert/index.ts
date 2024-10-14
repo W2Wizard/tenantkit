@@ -12,7 +12,8 @@ export const alertVariants = tv({
 			default: "bg-background text-foreground",
 			info: "bg-blue-100 border-blue-500 text-blue-700 [&>svg]:text-blue-700",
 			warning: "bg-yellow-100 border-yellow-500 text-yellow-700 [&>svg]:text-yellow-700",
-			destructive: "border-destructive/50 text-destructive text-destructive dark:border-destructive [&>svg]:text-destructive"
+			destructive:
+				"border-destructive/50 text-destructive text-destructive dark:border-destructive [&>svg]:text-destructive"
 		}
 	},
 	defaultVariants: {

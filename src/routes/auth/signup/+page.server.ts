@@ -39,17 +39,12 @@ export const actions: Actions = {
 			return Toasty.fail(422, "Invalid email or password");
 		}
 
-		// if (
-		// 	password.length < 8 ||
-		// 	!/\d/.test(password) ||
-		// 	!/[a-z]/.test(password) ||
-		// 	!/[A-Z]/.test(password)
-		// ) {
-		// 	return Toasty.fail(
-		// 		422,
-		// 		'Password must be at least 8 characters long and contain at least one number, one lowercase letter, and one uppercase letter'
-		// 	);
-		// }
+		if (password.length < 8 || !/\d/.test(password) || !/[a-z]/.test(password) || !/[A-Z]/.test(password)) {
+			return Toasty.fail(
+				422,
+				"Password must be at least 8 characters long and contain at least one number, one lowercase letter, and one uppercase letter"
+			);
+		}
 
 		if (password !== password2) {
 			return Toasty.fail(422, "Passwords do not match!");

@@ -1,4 +1,3 @@
-import QRCode from "qrcode";
 import { error, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad, RequestEvent } from "./$types";
 import { decodeHex, encodeHex } from "oslo/encoding";
@@ -8,6 +7,8 @@ import { Toasty } from "@/utils";
 import { users } from "@/db/schemas/shared";
 import { APP_NAME } from "$env/static/private";
 import { dev } from "$app/environment";
+import { Auth } from "@/server/auth";
+import { renderSVG } from "uqr";
 
 const IDENTITY_COOKIE = "identity";
 const TFA_SECRET_COOKIE = "secrecy";
@@ -48,7 +49,7 @@ export const load: PageServerLoad = async ({ locals, cookies }) => {
 	const uri = createTOTPKeyURI(APP_NAME, user.id, twoFactorSecret);
 	return {
 		secret: uri,
-		qr: await QRCode.toDataURL(uri, {})
+		qr: renderSVG(uri, { border: 1, ecc: "M" })
 	};
 };
 
@@ -85,12 +86,9 @@ export const actions: Actions = {
 				error(401, "Unauthorized");
 			}
 
-			const session = await event.locals.context.lucia.createSession(userId, {});
-			const sessionCookie = event.locals.context.lucia.createSessionCookie(session.id);
-			event.cookies.set(sessionCookie.name, sessionCookie.value, {
-				path: "/",
-				...sessionCookie.attributes
-			});
+			const token = Auth.generateSessionToken();
+			await Auth.createSession(event.locals.context, token, userId);
+			Auth.setCookie(event.cookies, token);
 
 			redirect(302, "/");
 		} else {

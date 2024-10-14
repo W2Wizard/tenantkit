@@ -20,8 +20,8 @@ import { Label } from "@/components/ui/label";
 import * as Popover from "@/components/ui/popover";
 import Form from "@/components/form.svelte";
 import Separator from "@/components/ui/separator/separator.svelte";
-	import { invalidate } from "$app/navigation";
-	import * as Alert from "@/components/ui/alert";
+import { invalidate } from "$app/navigation";
+import * as Alert from "@/components/ui/alert";
 
 const { data } = $props();
 

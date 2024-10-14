@@ -1,6 +1,6 @@
 import adapter from "svelte-adapter-bun";
 // import adapter from '@sveltejs/adapter-auto';
-import * as child_process from 'node:child_process';
+import * as child_process from "node:child_process";
 import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -27,7 +27,7 @@ const config = {
 		// 	}
 		// },
 		version: {
-			name: child_process.execSync('git rev-parse HEAD').toString().trim()
+			name: child_process.execSync("git rev-parse HEAD").toString().trim()
 		}
 	}
 };

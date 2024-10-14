@@ -16,8 +16,6 @@ declare global {
 	interface BaseContext {
 		/** The tenant / landlord domain (e.g., ocean.campaign.nl | campaign.nl) */
 		domain: string;
-		/** The auth context, used for creating auth sessions depending on tenant */
-		lucia: Lucia;
 	}
 
 	/** Landlord context */
@@ -41,7 +39,7 @@ declare global {
 			/** The current authenticated user */
 			user: User | null;
 			/** The current authenticated session */
-			session: Session | null;
+			session: shared.Sessions | null;
 			/** The current tenant database context (landlord or tenant) */
 			context: TenancyContext;
 			/** Global rate limiter */

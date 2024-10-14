@@ -5,6 +5,7 @@
 
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
+import { Auth } from "@/server/auth";
 
 // ============================================================================
 
@@ -25,8 +26,8 @@ export const actions: Actions = {
 			return fail(400, { message: "No session" });
 		}
 
-		await locals.context.lucia.invalidateSession(locals.session.id);
-		cookies.delete(locals.context.lucia.sessionCookieName, { path: "/" });
+		await Auth.invalidateSession(locals.context, locals.session.id);
+		Auth.deleteCookie(cookies);
 		redirect(302, "/auth/signin");
 	}
 };

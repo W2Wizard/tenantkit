@@ -52,27 +52,33 @@
     "@internationalized/date": "^3.5.5",
     "@isaacs/ttlcache": "^1.4.1",
     "@lucia-auth/adapter-drizzle": "^1.1.0",
+    "@oslojs/crypto": "^1.0.1",
+    "@oslojs/encoding": "^1.1.0",
+    "@redis/client": "^1.6.0",
     "@sveltejs/enhanced-img": "^0.3.8",
     "bits-ui": "^0.21.15",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.33.0",
     "jsonwebtoken": "^9.0.2",
-    "lucia": "^3.2.0",
     "lucide-svelte": "^0.446.0",
     "mode-watcher": "^0.4.1",
     "openapi-fetch": "^0.12.2",
     "oslo": "^1.2.1",
     "paneforge": "^0.0.6",
     "postgres": "^3.4.4",
-    "qrcode": "^1.5.4",
     "resend": "^3.5.0",
     "rollup-plugin-copy": "^3.5.0",
     "svelte-headless-table": "^0.18.2",
     "svelte-sonner": "^0.3.28",
     "tailwind-merge": "^2.5.2",
-    "tailwind-variants": "^0.2.1"
+    "tailwind-variants": "^0.2.1",
+    "uqr": "^0.1.2"
   },
   "trustedDependencies": [
+    "@biomejs/biome",
+    "@sveltejs/kit",
+    "esbuild",
+    "sharp",
     "svelte-preprocess"
   ]
 }

@@ -3,6 +3,7 @@
 // See README in the root project for more information.
 // ============================================================================
 
+import type { InferSelectModel } from "drizzle-orm";
 import { pgTable, text, varchar, serial, timestamp, boolean, uuid } from "drizzle-orm/pg-core";
 
 /**
@@ -22,6 +23,8 @@ export const sessions = pgTable("sessions", {
 	expiresAt: timestamp("expires_at").notNull()
 });
 
+export type Sessions = InferSelectModel<typeof sessions>;
+
 // Reset tokens for password resets
 export const resetTokens = pgTable("reset_tokens", {
 	id: text("id").primaryKey(),
@@ -29,7 +32,7 @@ export const resetTokens = pgTable("reset_tokens", {
 	expiresAt: timestamp("expires_at", { withTimezone: true, mode: "date" }).notNull()
 });
 
-export type ResetTokens = typeof resetTokens.$inferSelect;
+export type ResetTokens = InferSelectModel<typeof resetTokens>;
 
 // Verification tokens
 export const verificationTokens = pgTable("verification_tokens", {
@@ -39,6 +42,8 @@ export const verificationTokens = pgTable("verification_tokens", {
 	userId: uuid("user_id").unique().notNull(),
 	expiresAt: timestamp("expires_at").notNull()
 });
+
+export type VerificationTokens = InferSelectModel<typeof verificationTokens>;
 
 // ============================================================================
 
@@ -55,4 +60,4 @@ export const users = pgTable("users", {
 	tfa: text("tfa")
 });
 
-export type UsersType = typeof users.$inferSelect;
+export type UsersType = InferSelectModel<typeof users>;

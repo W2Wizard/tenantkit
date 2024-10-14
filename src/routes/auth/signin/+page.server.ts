@@ -47,11 +47,7 @@ export const actions: Actions = {
 			return Toasty.fail(422, "Invalid email or password");
 		}
 
-		const userDatas = await locals.context.db
-			.select()
-			.from(users)
-			.where(eq(users.email, email))
-			.limit(1);
+		const userDatas = await locals.context.db.select().from(users).where(eq(users.email, email)).limit(1);
 		const user = userDatas.at(0);
 		if (!user || !user.hash) {
 			return Toasty.fail(422, "Invalid email or password");
