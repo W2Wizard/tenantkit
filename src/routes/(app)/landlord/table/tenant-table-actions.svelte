@@ -4,8 +4,14 @@ import { Button } from "$lib/components/ui/button";
 import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
 import type { TenantsType } from "@/db/schemas/landlord";
 import { tenant } from "../state.svelte";
+import Form from "@/components/form.svelte";
+import { invalidate } from "$app/navigation";
 
-const { selected }: { selected: TenantsType } = $props();
+interface Props {
+	selected: TenantsType;
+}
+
+const { selected }: Props = $props();
 </script>
 
 <DropdownMenu.Root>
@@ -20,30 +26,23 @@ const { selected }: { selected: TenantsType } = $props();
 		</Button>
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="w-[180px]" align="end">
-		<DropdownMenu.Item on:click={() => ($tenant = selected)}>
-			Edit
-			<DropdownMenu.Shortcut>
-				<Pen class="size-4" />
-			</DropdownMenu.Shortcut>
-		</DropdownMenu.Item>
-		<DropdownMenu.Item on:click={() => console.log("123")}>
-			Screen Selection
-			<DropdownMenu.Shortcut>
-				<Filter class="size-4" />
-			</DropdownMenu.Shortcut>
-		</DropdownMenu.Item>
-		<DropdownMenu.Item on:click={() => console.log("123")}>
-			Edit CPM or Price
-			<DropdownMenu.Shortcut>
-				<Banknote class="size-4" />
-			</DropdownMenu.Shortcut>
-		</DropdownMenu.Item>
-		<DropdownMenu.Separator />
-		<DropdownMenu.Item>
-			Delete
-			<DropdownMenu.Shortcut>
-				<Trash2 class="h-4 w-4" />
-			</DropdownMenu.Shortcut>
-		</DropdownMenu.Item>
+		<Form method="POST" beforeSubmit={() => confirm("Are you sure?")} onResult={() => invalidate("landlord:tenants")}>
+			<input hidden readonly name="id" value={selected.id}/>
+			<DropdownMenu.Item on:click={() => ($tenant = selected)}>
+				Edit
+				<DropdownMenu.Shortcut>
+					<Pen class="size-4" />
+				</DropdownMenu.Shortcut>
+			</DropdownMenu.Item>
+			<DropdownMenu.Separator />
+			<DropdownMenu.Item>
+				<button formaction="?/delete" class="p-0 bg-none w-full text-left">
+					Delete
+				</button>
+				<DropdownMenu.Shortcut>
+					<Trash2 class="h-4 w-4" />
+				</DropdownMenu.Shortcut>
+			</DropdownMenu.Item>
+		</Form>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>

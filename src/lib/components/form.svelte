@@ -6,13 +6,31 @@ import type { HTMLFormAttributes } from "svelte/elements";
 
 interface Props extends HTMLFormAttributes {
 	isLoading?: boolean;
+	/**
+	 * Function to handle submit cancellations.
+	 * If for instance you want to confirm a submission.
+	 * If false no submit fetch is sent, else it will be submitted.
+	 */
+	beforeSubmit?: () => boolean;
+	/**
+	 * Hook to check if the form is currently loading / awaiting a response.
+	 * @param isLoading True if is awaiting a response else false.
+	 */
 	onLoading?: (isLoading: boolean) => void;
+	/**
+	 * Once a response has been received you can get the action result.
+	 * @param result The resulting action of getting the response.
+	 */
 	onResult?: (result: ActionResult) => void;
 }
 
-let { isLoading, onLoading, onResult, children, ...rest }: Props = $props();
+let { isLoading = $bindable(), onLoading, onResult, children, onsubmit, beforeSubmit, ...rest }: Props = $props();
 
-export const onSubmit: SubmitFunction = () => {
+export const onSubmit: SubmitFunction = ({ cancel }) => {
+	if (beforeSubmit?.() === false) {
+		cancel();
+	}
+
 	onLoading?.((isLoading = true));
 	toast.loading("Loading...");
 

@@ -1,12 +1,9 @@
 <script lang="ts">
-import { readable, writable } from "svelte/store";
 import { defineTable } from "@/components/ui/table/data";
 import DataTableActions from "./tenant-table-actions.svelte";
 import DataTable from "@/components/ui/table/data/data-table.svelte";
 import { createRender } from "svelte-headless-table";
-import type { TenantsType } from "@/db/schemas/landlord";
 import { tenants } from "../state.svelte";
-import type { PaginationState } from "svelte-headless-table/plugins";
 
 const table = defineTable(tenants);
 const columns = table.createColumns([
@@ -59,7 +56,10 @@ const columns = table.createColumns([
 		accessor: (item) => item,
 		header: "",
 		//@ts-ignore Wait for svelte 5 release
-		cell: ({ value }) => createRender(DataTableActions, { selected: value }),
+		cell: ({ value }) =>
+			createRender(DataTableActions, {
+				selected: value
+			}),
 		plugins: {
 			sort: {
 				disable: true

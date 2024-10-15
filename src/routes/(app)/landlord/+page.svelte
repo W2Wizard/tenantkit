@@ -42,7 +42,7 @@ const loadTenants = async () => ($tenants = await Promise.resolve(data.tenants))
 			</Button>
 			</Popover.Trigger>
 			<Popover.Content class="w-80">
-				<Form class="grid gap-4" onResult={async() => await invalidate("landlord:tenants")}>
+				<Form class="grid gap-4" action="?/create" onResult={async() => await invalidate("landlord:tenants")}>
 					<div class="space-y-2">
 				 		<h4 class="font-medium leading-none">Tenant</h4>
 				 		<p class="text-muted-foreground text-sm">
@@ -78,7 +78,7 @@ const loadTenants = async () => ($tenants = await Promise.resolve(data.tenants))
 					<Skeleton class="h-4 w-[200px]" />
 				</div>
 			</div>
-		{:then _}
+		{:then}
 			{#if $tenants.length <= 0}
 			<Alert.Root variant="info">
 				<UsersRound class="size-4" />

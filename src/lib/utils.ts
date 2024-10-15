@@ -8,9 +8,10 @@ import { twMerge } from "tailwind-merge";
 import { cubicOut } from "svelte/easing";
 import { browser } from "$app/environment";
 import { getContext, setContext } from "svelte";
-import { error, fail as kitFail } from "@sveltejs/kit";
+import { error, fail as kitFail, type RequestEvent } from "@sveltejs/kit";
 import { writable, type Updater } from "svelte/store";
 import type { TransitionConfig } from "svelte/transition";
+import type { z } from "zod";
 
 // Tailwind utilities
 // ============================================================================
@@ -139,10 +140,56 @@ export namespace API {
 }
 
 /**
- * Wrapper functions for handling universal toasts by awaited forms.
+ * Check that the event is permitted to do the action.
+ * E.g: Rate limit, application type...
  *
- * @see AwaitForm for more information.
+ * @template T The context underwhich this event should be registered.
+ *
+ * @param event The Event to check.
+ * @param type The type of context to check against ("landlord" or "tenant").
+ * @warning DO NOT CATCH THIS METHOD!
+ * @returns The event, useful for chaining.
  */
+export async function validate<E extends RequestEvent, T extends "landlord" | "tenant" = "landlord">(
+	event: E,
+	type?: T
+) {
+	const {
+		locals: { context }
+	} = event;
+	const contextType = type ?? "landlord";
+	const check = await event.locals.limiter.check(event);
+	if (check.isLimited) {
+		error(429, `Try again in ${check.retryAfter} seconds`);
+	}
+
+	if (context.type !== contextType) {
+		error(401, "Unauthorized access");
+	}
+
+	// Return the event, ensuring the type matches the specific context
+	return event as E & {
+		locals: { context: T extends "landlord" ? LandlordContext : TenantContext };
+	};
+}
+
+export namespace FormSchema {
+	/**
+	 * Formats the issues into field, and message.
+	 * @param issues The issues to format
+	 * @returns
+	 */
+	export function formatErrors(issues: z.ZodIssue[]) {
+		return issues.map((error) => {
+			return {
+				field: error.path[0],
+				message: error.message
+			};
+		});
+	}
+}
+
+/** Wrapper functions for handling universal toasts by awaited forms.*/
 export namespace Toasty {
 	/**
 	 * Universal way to just simply return a failure with a message.

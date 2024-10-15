@@ -63,11 +63,21 @@ namespace Tenants {
 	 * @param tenantName
 	 * @returns
 	 */
-	export async function remove(db: PostgresJsDatabase, tenantName: string) {
-		return;
+	export async function remove(ctx: LandlordContext, id: string) {
+		const tenant = await ctx.db.query.tenants.findFirst({
+			where: eq(tenants.id, id)
+		});
+
+		// TODO: Figure out what else to really delete. E.g: Dropping the entire DB?
+		if (!tenant) return null;
+		await ctx.db.transaction(async (tx) => {
+			await tx.delete(tenants).where(eq(tenants.id, id));
+		});
+
+		return tenant;
 	}
 
-	export async function update(db: PostgresJsDatabase, tenantName: string) {
+	export async function update(ctx: LandlordContext, tenantName: string) {
 		return;
 	}
 

@@ -7,7 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": []
+		"ignore": ["build/", ".svelte-kit/", "dist/"]
 	},
 	"formatter": {
 		"enabled": true,
@@ -18,7 +18,7 @@
 		"lineWidth": 120,
 		"attributePosition": "auto",
 		"bracketSpacing": true,
-		"ignore": ["**/package-lock.json", "**/pnpm-lock.yaml", "**/yarn.lock", "**/*.json"]
+		"ignore": ["**/package-lock.json", "**/pnpm-lock.yaml", "**/yarn.lock", "**/*.json", ".svelte-kit", "build"]
 	},
 	"organizeImports": {
 		"enabled": true
@@ -60,11 +60,14 @@
 				"useYield": "error"
 			},
 			"style": {
-				"noNamespace": "error",
+				"noNamespace": "off",
+				"noVar": "error",
+				"useShorthandArrayType": "error",
 				"useAsConstAssertion": "error",
 				"useBlockStatements": "off"
 			},
 			"suspicious": {
+				"noImplicitAnyLet": "error",
 				"noAsyncPromiseExecutor": "error",
 				"noCatchAssign": "error",
 				"noClassAssign": "error",
@@ -112,6 +115,7 @@
 	},
 	"overrides": [
 		{
+			"ignore": ["build/", ".svelte-kit/", "dist/"],
 			"include": ["*.svelte", "*.astro", "*.vue"],
 			"linter": {
 				"rules": {
