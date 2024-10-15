@@ -54,6 +54,7 @@ namespace Tenants {
 
 		await ctx.db.execute(sql`CREATE DATABASE ${sql.raw(dbName)}`);
 		await ctx.db.insert(tenants).values({
+			name,
 			domain: `${name}.localhost`,
 			dbUri: tenantURL,
 		});

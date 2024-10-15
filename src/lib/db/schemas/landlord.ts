@@ -3,7 +3,7 @@
 // See README in the root project for more information.
 // ============================================================================
 
-import { text } from "drizzle-orm/pg-core";
+import { text, varchar } from "drizzle-orm/pg-core";
 import { declareTable, joinTable, jwtEncoded } from "../utils";
 export * from "./shared";
 
@@ -11,6 +11,7 @@ export * from "./shared";
 // ============================================================================
 
 export const tenants = declareTable("tenants", {
+	name: varchar("name", { length: 256 }).notNull(),
 	domain: text("domain").notNull().unique(),
 	dbUri: jwtEncoded("db_uri").notNull(),
 });

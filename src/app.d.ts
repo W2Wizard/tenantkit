@@ -5,7 +5,6 @@ import type { LandlordDB, TenantDB } from "@/db/utils";
 import * as shared from "@/db/schemas/shared";
 import * as tenant from "@/db/schemas/tenant";
 import * as landlord from "@/db/schemas/landlord";
-import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 
 // Define the TenancyContext types directly as a discriminated union
 declare global {

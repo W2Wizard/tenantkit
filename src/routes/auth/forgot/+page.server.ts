@@ -5,7 +5,7 @@
 
 import { error, fail, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
-import { Auth, RESET_TOKEN_LENGTH, createResetToken } from "$lib/server/auth";
+import { Auth } from "$lib/server/auth";
 import { resetTokens, users } from "@/db/schemas/shared";
 import { resend } from "@/mail";
 import { isWithinExpirationDate } from "oslo";
@@ -33,7 +33,7 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 	if (
 		!url.searchParams.has("token") ||
 		!tokenQuery ||
-		tokenQuery.length !== RESET_TOKEN_LENGTH
+		tokenQuery.length !== Auth.RESET_TOKEN_LENGTH
 	)
 		return { token: null };
 
@@ -87,7 +87,7 @@ export const actions: Actions = {
 		}
 
 		// TODO: Use custom email template
-		const token = createResetToken(event.locals.context.db, user.id);
+		const token = Auth.createResetToken(event.locals.context, user.id);
 		const link = `http://localhost:5173/auth/forgot?token=${token}`;
 		resend.emails.send({
 			from: "onboarding@resend.dev",
@@ -103,12 +103,12 @@ export const actions: Actions = {
 		return Toasty.success(message);
 	},
 	// Reset the password
-	reset: async ({ request, cookies, url, locals }) => {
+	reset: async ({ request, cookies, locals }) => {
 		const formData = await request.formData();
 		const tokenQuery = formData.get("token")?.toString();
 		const password = formData.get("new-password")?.toString();
 		// const password2 = formData.get('new-password2')?.toString();
-		if (!tokenQuery || tokenQuery.length !== RESET_TOKEN_LENGTH) {
+		if (!tokenQuery || tokenQuery.length !== Auth.RESET_TOKEN_LENGTH) {
 			error(400, "Invalid token");
 		}
 		// if (password1 !== password2) {
