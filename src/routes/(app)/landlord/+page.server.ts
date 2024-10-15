@@ -26,8 +26,12 @@ export const load: PageServerLoad = async ({ locals, depends }) => {
 // Schemas
 // ============================================================================
 
-const tenantSchema = z.object({
+const deleteSchema = z.object({
 	id: z.string().uuid().readonly(),
+});
+
+const createSchema = z.object({
+	name: z.string().min(3, "Needs to be at least 3 characters"),
 });
 
 // ============================================================================
@@ -39,7 +43,7 @@ export const actions: Actions = {
 			locals: { context },
 		} = await validate(event);
 		const formData = Object.fromEntries(await request.formData());
-		const form = await tenantSchema.safeParseAsync(formData);
+		const form = await deleteSchema.safeParseAsync(formData);
 
 		if (!form.success) {
 			return Toasty.fail(
@@ -62,13 +66,17 @@ export const actions: Actions = {
 			locals: { context },
 		} = await validate(event);
 
-		const formData = await request.formData();
-		const name = formData.get("name")?.toString();
-		if (!name || !/^[a-zA-Z]+$/.test(name)) {
-			return Toasty.fail(400, "Invalid name");
+		const formData = Object.fromEntries(await request.formData());
+		const form = await createSchema.safeParseAsync(formData);
+		if (!form.success) {
+			return Toasty.fail(
+				400,
+				"Invalid form",
+				FormSchema.formatErrors(form.error.issues),
+			);
 		}
 
-		const [r, e] = await ensure(Tenants.create(context, name));
+		const [r, e] = await ensure(Tenants.create(context, form.data.name));
 		if (e) return Toasty.fail(400, e.message);
 		return Toasty.success("Tenant created");
 	},

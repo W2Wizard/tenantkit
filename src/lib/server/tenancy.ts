@@ -3,7 +3,7 @@
 // See README in the root project for more information.
 // ============================================================================
 
-import { ensure } from "@/utils";
+import { ensure, slugify, Toasty } from "@/utils";
 import { eq, sql } from "drizzle-orm";
 import { tenants } from "@/db/schemas/landlord";
 import type { UsersType } from "@/db/schemas/shared";
@@ -49,13 +49,15 @@ namespace Tenants {
 	 * @returns
 	 */
 	export async function create(ctx: LandlordContext, name: string) {
-		const dbName = `tenant_${name.toLowerCase()}`;
+		const slug = slugify(name);
+		const dbName = `tenant_${slug.replaceAll("-", "_")}`;
 		const tenantURL = `postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${dbName}`;
 
+		console.log(slug, tenantURL, dbName);
 		await ctx.db.execute(sql`CREATE DATABASE ${sql.raw(dbName)}`);
 		await ctx.db.insert(tenants).values({
 			name,
-			domain: `${name}.localhost`,
+			domain: slug,
 			dbUri: tenantURL,
 		});
 

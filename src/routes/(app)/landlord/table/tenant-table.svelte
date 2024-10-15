@@ -13,8 +13,18 @@ const columns = table.createColumns([
 		cell: ({ value }) => value,
 	}),
 	table.column({
+		accessor: "name",
+		header: "Name",
+		cell: ({ value }) => value,
+		plugins: {
+			sort: {
+				disable: true,
+			},
+		},
+	}),
+	table.column({
 		accessor: "domain",
-		header: "Domain",
+		header: "Sub-Domain",
 		cell: ({ value }) => value,
 		plugins: {
 			sort: {

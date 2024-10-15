@@ -27,6 +27,7 @@ import Form from "@/components/form.svelte";
 import Separator from "@/components/ui/separator/separator.svelte";
 import { invalidate } from "$app/navigation";
 import * as Alert from "@/components/ui/alert";
+import { PUBLIC_APP_DOMAIN } from "$env/static/public";
 
 const { data } = $props();
 
@@ -113,23 +114,31 @@ const loadTenants = async () =>
 <Sheet.Root open={$tenant !== null} onOpenChange={(v) => $tenant = v ? $tenant : null}>
   <Sheet.Content side="left">
     <Sheet.Header>
-      <Sheet.Title>Edit profile</Sheet.Title>
+      <Sheet.Title>Edit Tenant</Sheet.Title>
       <Sheet.Description>
-        Make changes to your profile here. Click save when you're done.
+        Set Tenant data
       </Sheet.Description>
     </Sheet.Header>
     <div class="grid gap-4 py-4">
 			{#if $tenant}
-				<div class="grid grid-cols-4 items-center gap-4">
+				<div class="flex flex-col gap-2 items-start">
 					<Label for="id" class="text-right">Id</Label>
 					<Input id="id" name="id" readonly value={$tenant.id} class="col-span-3" />
 				</div>
-				<div class="grid grid-cols-4 items-center gap-4">
+				<div class="flex flex-col gap-2 items-start">
+					<Label for="domain" class="text-right">Name</Label>
+					<Input id="domain" name="domain" value={$tenant.name} class="col-span-3" />
+				</div>
+				<div class="flex flex-col gap-2 items-start">
 					<Label for="domain" class="text-right">Domain</Label>
-					<Input id="domain" name="domain" value={$tenant.domain} class="col-span-3" />
+					<div class="flex w-full gap-2 items-center">
+						<Input id="domain" name="domain" value={$tenant.domain} class="col-span-3 flex-1" />
+						<span>.{PUBLIC_APP_DOMAIN}</span>
+					</div>
 				</div>
 			{/if}
     </div>
+		<Separator class="my-2"/>
     <Sheet.Footer>
       <Sheet.Close asChild let:builder>
         <Button builders={[builder]} type="submit">Save changes</Button>
