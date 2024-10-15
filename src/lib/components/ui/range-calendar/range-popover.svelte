@@ -1,7 +1,12 @@
 <script lang="ts">
 import { Calendar } from "lucide-svelte";
 import type { DateRange } from "bits-ui";
-import { CalendarDate, DateFormatter, type DateValue, getLocalTimeZone } from "@internationalized/date";
+import {
+	CalendarDate,
+	DateFormatter,
+	type DateValue,
+	getLocalTimeZone,
+} from "@internationalized/date";
 import { cn } from "$lib/utils.js";
 import { Button } from "$lib/components/ui/button/index.js";
 import { RangeCalendar } from "$lib/components/ui/range-calendar/index.js";
@@ -13,7 +18,7 @@ interface Props {
 
 let { value = $bindable(undefined) }: Props = $props();
 const df = new DateFormatter("en-US", {
-	dateStyle: "medium"
+	dateStyle: "medium",
 });
 </script>
 

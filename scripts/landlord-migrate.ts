@@ -17,7 +17,9 @@ if (!Bun.env.DB_URL) {
 	process.exit(1);
 }
 
-if (!(await confirm({ message: "Are you sure you want to apply the migration?" }))) {
+if (
+	!(await confirm({ message: "Are you sure you want to apply the migration?" }))
+) {
 	process.exit(0);
 }
 

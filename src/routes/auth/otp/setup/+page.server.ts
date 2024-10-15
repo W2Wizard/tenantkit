@@ -28,7 +28,10 @@ export const load: PageServerLoad = async ({ locals, cookies }) => {
 		error(403);
 	}
 
-	const result = await locals.context.db.select().from(users).where(eq(users.id, userId));
+	const result = await locals.context.db
+		.select()
+		.from(users)
+		.where(eq(users.id, userId));
 	const user = result.at(0);
 	if (!user || user.id !== userId) {
 		cookies.delete(IDENTITY_COOKIE, { path: "/" });
@@ -43,13 +46,13 @@ export const load: PageServerLoad = async ({ locals, cookies }) => {
 	cookies.set(TFA_SECRET_COOKIE, encodeHex(twoFactorSecret), {
 		path: "/",
 		httpOnly: true,
-		secure: !dev
+		secure: !dev,
 	});
 
 	const uri = createTOTPKeyURI(APP_NAME, user.id, twoFactorSecret);
 	return {
 		secret: uri,
-		qr: renderSVG(uri, { border: 1, ecc: "M" })
+		qr: renderSVG(uri, { border: 1, ecc: "M" }),
 	};
 };
 
@@ -94,5 +97,5 @@ export const actions: Actions = {
 		} else {
 			return Toasty.fail(400, "Invalid OTP");
 		}
-	}
+	},
 };

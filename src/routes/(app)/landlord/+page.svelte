@@ -1,5 +1,10 @@
 <script lang="ts">
-import { CirclePlus, File, UsersRound, MessageSquareWarning } from "lucide-svelte/icons";
+import {
+	CirclePlus,
+	File,
+	UsersRound,
+	MessageSquareWarning,
+} from "lucide-svelte/icons";
 
 import { Badge } from "$lib/components/ui/badge/index.js";
 import { Button } from "$lib/components/ui/button/index.js";
@@ -27,7 +32,8 @@ const { data } = $props();
 
 let pageState: PaginationState;
 
-const loadTenants = async () => ($tenants = await Promise.resolve(data.tenants));
+const loadTenants = async () =>
+	($tenants = await Promise.resolve(data.tenants));
 </script>
 
 <div class="flex items-center">

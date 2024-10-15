@@ -27,7 +27,7 @@ const navItems = [
 	{ href: "##", icon: ShoppingCart, label: "Orders", badge: 6 },
 	{ href: "##", icon: Package, label: "Products", active: true },
 	{ href: "##", icon: Users, label: "Customers" },
-	{ href: "##", icon: LineChart, label: "Analytics" }
+	{ href: "##", icon: LineChart, label: "Analytics" },
 ];
 </script>
 

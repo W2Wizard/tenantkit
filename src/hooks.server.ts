@@ -54,8 +54,7 @@ const routes: Record<string, boolean> = {
 const handleTenant: Handle = async ({ event, resolve }) => {
 	const retrieveContext = (key: string, uri: string, type: "landlord" | "tenant") => {
 		if (!connections.has(key)) {
-			const schema =
-				type === "landlord" ? { ...landlordSchema, ...sharedSchema } : { ...tenantSchema, ...sharedSchema };
+			const schema = type === "landlord" ? { ...landlordSchema, ...sharedSchema } : { ...tenantSchema, ...sharedSchema };
 
 			// NOTE(W2): This is technically correct. Retrieve context can be used for both
 			const db = drizzle(postgres(uri, { max: 24 }), { schema }) as LandlordDB | TenantDB;
@@ -111,12 +110,9 @@ export const handleAuth: Handle = async ({ event, resolve }) => {
 		event.locals.user = null;
 		event.locals.session = null;
 
+		// User is trying to sign in OR
 		// Allow non-authenticated access if the route doesn't require authentication
-		if (routes[event.url.pathname] === false) {
-			return resolve(event);
-		}
-		// User is trying to sign in.
-		if (event.url.pathname.startsWith("/auth")) {
+		if (routes[event.url.pathname] === false || event.url.pathname.startsWith("/auth")) {
 			return resolve(event);
 		}
 		// If route requires authentication and no session exists, redirect to signin
@@ -138,11 +134,7 @@ export const handleAuth: Handle = async ({ event, resolve }) => {
 	}
 
 	// Landlord application must only have access to the landlord route
-	if (
-		!event.url.pathname.startsWith("/landlord") &&
-		event.locals.context.type === "landlord" &&
-		!event.url.pathname.startsWith("/auth")
-	) {
+	if (!event.url.pathname.startsWith("/landlord") && event.locals.context.type === "landlord" && !event.url.pathname.startsWith("/auth")) {
 		redirect(303, "/landlord");
 	}
 

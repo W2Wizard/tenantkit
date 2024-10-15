@@ -25,7 +25,7 @@ export async function SQLFunctions(con: Connection) {
 			.filter((file) => file.endsWith(".sql"))
 			.map(async (file) => {
 				return Bun.file(join(dir, file));
-			})
+			}),
 	);
 
 	// // Save the SQL scripts to the database or use them as needed

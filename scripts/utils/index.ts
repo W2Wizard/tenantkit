@@ -48,7 +48,7 @@ export async function connect(url: string): Promise<Connection> {
 		max: 1,
 		onnotice(notice) {
 			if (notice.severity !== "NOTICE") console.warn("Warning:", notice);
-		}
+		},
 	});
 
 	return { sql, db: drizzle(sql) };

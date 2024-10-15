@@ -17,7 +17,7 @@ import { addPagination, addSortBy } from "svelte-headless-table/plugins";
 export function defineTable<T>(data: ReadOrWritable<T[]>) {
 	return createTable(data, {
 		page: addPagination(),
-		sort: addSortBy()
+		sort: addSortBy(),
 	});
 }
 

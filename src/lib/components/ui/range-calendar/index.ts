@@ -28,5 +28,5 @@ export {
 	PrevButton,
 	//
 	Root as RangeCalendar,
-	PopoverRange as RangePopover
+	PopoverRange as RangePopover,
 };

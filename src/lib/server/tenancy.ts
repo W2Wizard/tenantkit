@@ -9,7 +9,13 @@ import { tenants } from "@/db/schemas/landlord";
 import type { UsersType } from "@/db/schemas/shared";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import { drizzle, type PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import { DB_HOST, DB_PASSWORD, DB_PORT, DB_URL, DB_USER } from "$env/static/private";
+import {
+	DB_HOST,
+	DB_PASSWORD,
+	DB_PORT,
+	DB_URL,
+	DB_USER,
+} from "$env/static/private";
 import postgres from "postgres";
 
 // Types
@@ -27,7 +33,7 @@ export async function connect(url: string) {
 		max: 1,
 		onnotice(notice) {
 			if (notice.severity !== "NOTICE") console.warn("Warning:", notice);
-		}
+		},
 	});
 
 	return { pg, db: drizzle(pg) };
@@ -49,7 +55,7 @@ namespace Tenants {
 		await ctx.db.execute(sql`CREATE DATABASE ${sql.raw(dbName)}`);
 		await ctx.db.insert(tenants).values({
 			domain: `${name}.localhost`,
-			dbUri: tenantURL
+			dbUri: tenantURL,
 		});
 
 		const { db, pg } = await connect(tenantURL);
@@ -65,7 +71,7 @@ namespace Tenants {
 	 */
 	export async function remove(ctx: LandlordContext, id: string) {
 		const tenant = await ctx.db.query.tenants.findFirst({
-			where: eq(tenants.id, id)
+			where: eq(tenants.id, id),
 		});
 
 		// TODO: Figure out what else to really delete. E.g: Dropping the entire DB?
@@ -83,7 +89,7 @@ namespace Tenants {
 
 	export async function fromDomain(ctx: LandlordContext, domain: URL) {
 		return ctx.db.query.tenants.findFirst({
-			where: eq(tenants.domain, domain.hostname)
+			where: eq(tenants.domain, domain.hostname),
 		});
 	}
 }

@@ -7,10 +7,10 @@ export default {
 	verbose: true,
 	dialect: "postgresql",
 	dbCredentials: {
-		url: process.env.DB_URL ?? "None"
+		url: process.env.DB_URL ?? "None",
 	},
 	migrations: {
 		table: "migrations", // default `__drizzle_migrations`,
-		schema: "public" // used in PostgreSQL only and default to `drizzle`
-	}
+		schema: "public", // used in PostgreSQL only and default to `drizzle`
+	},
 } satisfies Config;

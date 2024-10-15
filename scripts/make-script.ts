@@ -26,7 +26,7 @@ const name = await input({
 			return "Script with that name already exists";
 		}
 		return true;
-	}
+	},
 });
 
 const sanitized_name = name.replace(/[\/:*?"<>|\\]/g, "-");

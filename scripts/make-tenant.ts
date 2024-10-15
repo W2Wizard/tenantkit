@@ -24,7 +24,7 @@ const name = await input({
 			return "Invalid tenant name. Only alphanumeric characters, hyphens, and underscores are allowed.";
 		}
 		return true;
-	}
+	},
 });
 
 const domain = await input({
@@ -34,7 +34,7 @@ const domain = await input({
 			return "Invalid tenant name. Only alphanumeric characters, hyphens, and underscores are allowed.";
 		}
 		return true;
-	}
+	},
 });
 
 dbUrl.pathname = `tenant_${name}`;
@@ -42,7 +42,7 @@ const tenants = await db
 	.insert(tenants)
 	.values({
 		domain,
-		dbUri: dbUrl.href
+		dbUri: dbUrl.href,
 	})
 	.returning()
 	.onConflictDoNothing();

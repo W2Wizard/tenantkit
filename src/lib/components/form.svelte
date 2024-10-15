@@ -24,7 +24,15 @@ interface Props extends HTMLFormAttributes {
 	onResult?: (result: ActionResult) => void;
 }
 
-let { isLoading = $bindable(), onLoading, onResult, children, onsubmit, beforeSubmit, ...rest }: Props = $props();
+let {
+	isLoading = $bindable(),
+	onLoading,
+	onResult,
+	children,
+	onsubmit,
+	beforeSubmit,
+	...rest
+}: Props = $props();
 
 export const onSubmit: SubmitFunction = ({ cancel }) => {
 	if (beforeSubmit?.() === false) {

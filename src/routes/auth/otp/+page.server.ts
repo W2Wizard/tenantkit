@@ -43,7 +43,7 @@ export const actions: Actions = {
 		}
 
 		const user = await db.query.users.findFirst({
-			where: eq(users.id, userId)
+			where: eq(users.id, userId),
 		});
 
 		if (!user || user.id !== userId) {
@@ -61,9 +61,12 @@ export const actions: Actions = {
 			const token = Auth.generateSessionToken();
 			await Auth.createSession(event.locals.context, token, userId);
 			Auth.setCookie(cookies, token);
-			return redirect(301, event.locals.context.type === "landlord" ? "/landlord" : "/");
+			return redirect(
+				301,
+				event.locals.context.type === "landlord" ? "/landlord" : "/",
+			);
 		} else {
 			return Toasty.fail(400, "Invalid OTP");
 		}
-	}
+	},
 };

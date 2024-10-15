@@ -29,12 +29,16 @@ type FlyAndScaleParams = {
 
 export const flyAndScale = (
 	node: Element,
-	params: FlyAndScaleParams = { y: -8, x: 0, start: 0.95, duration: 150 }
+	params: FlyAndScaleParams = { y: -8, x: 0, start: 0.95, duration: 150 },
 ): TransitionConfig => {
 	const style = getComputedStyle(node);
 	const transform = style.transform === "none" ? "" : style.transform;
 
-	const scaleConversion = (valueA: number, scaleA: [number, number], scaleB: [number, number]) => {
+	const scaleConversion = (
+		valueA: number,
+		scaleA: [number, number],
+		scaleB: [number, number],
+	) => {
 		const [minA, maxA] = scaleA;
 		const [minB, maxB] = scaleB;
 
@@ -44,7 +48,9 @@ export const flyAndScale = (
 		return valueB;
 	};
 
-	const styleToString = (style: Record<string, number | string | undefined>): string => {
+	const styleToString = (
+		style: Record<string, number | string | undefined>,
+	): string => {
 		return Object.keys(style).reduce((str, key) => {
 			if (style[key] === undefined) return str;
 			return str + `${key}:${style[key]};`;
@@ -61,10 +67,10 @@ export const flyAndScale = (
 
 			return styleToString({
 				transform: `${transform} translate3d(${x}px, ${y}px, 0) scale(${scale})`,
-				opacity: t
+				opacity: t,
 			});
 		},
-		easing: cubicOut
+		easing: cubicOut,
 	};
 };
 
@@ -96,7 +102,7 @@ export function clientWritable<T>(initialValue: T) {
 	return {
 		subscribe: store.subscribe,
 		set,
-		update
+		update,
 	};
 }
 
@@ -109,7 +115,7 @@ export function clientWritable<T>(initialValue: T) {
 export function useContext<T>(key: any) {
 	return {
 		get: () => getContext<T>(key),
-		set: (value: T) => setContext(key, value)
+		set: (value: T) => setContext(key, value),
 	};
 }
 
@@ -124,11 +130,14 @@ export async function useFileReader(file: File) {
 }
 
 export namespace API {
-	export async function fetchy<T = unknown>(route: string, init?: RequestInit & { fetch?: typeof fetch }) {
+	export async function fetchy<T = unknown>(
+		route: string,
+		init?: RequestInit & { fetch?: typeof fetch },
+	) {
 		const fetchy = init?.fetch ?? fetch;
 		const response = await fetchy(route, {
 			signal: AbortSignal.timeout(1000),
-			...init
+			...init,
 		});
 
 		if (!response.ok) {
@@ -150,12 +159,12 @@ export namespace API {
  * @warning DO NOT CATCH THIS METHOD!
  * @returns The event, useful for chaining.
  */
-export async function validate<E extends RequestEvent, T extends "landlord" | "tenant" = "landlord">(
-	event: E,
-	type?: T
-) {
+export async function validate<
+	E extends RequestEvent,
+	T extends "landlord" | "tenant" = "landlord",
+>(event: E, type?: T) {
 	const {
-		locals: { context }
+		locals: { context },
 	} = event;
 	const contextType = type ?? "landlord";
 	const check = await event.locals.limiter.check(event);
@@ -183,7 +192,7 @@ export namespace FormSchema {
 		return issues.map((error) => {
 			return {
 				field: error.path[0],
-				message: error.message
+				message: error.message,
 			};
 		});
 	}
@@ -197,7 +206,11 @@ export namespace Toasty {
 	 * @param message The message of the failure
 	 * @returns
 	 */
-	export function fail<T>(status: number, message: string, rest: T = undefined as T) {
+	export function fail<T>(
+		status: number,
+		message: string,
+		rest: T = undefined as T,
+	) {
 		return kitFail(status, { message, ...rest });
 	}
 
@@ -217,7 +230,9 @@ export namespace Toasty {
  * @param promise The promise to ensure / await.
  * @returns Either the result or an error.
  */
-export async function ensure<T, E = Error>(promise: Promise<T>): Promise<[T, null] | [null, E]> {
+export async function ensure<T, E = Error>(
+	promise: Promise<T>,
+): Promise<[T, null] | [null, E]> {
 	try {
 		const result = await promise;
 		return [result, null];

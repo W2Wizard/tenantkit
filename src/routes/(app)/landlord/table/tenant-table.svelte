@@ -10,7 +10,7 @@ const columns = table.createColumns([
 	table.column({
 		header: "Id",
 		accessor: ({ id }) => id,
-		cell: ({ value }) => value
+		cell: ({ value }) => value,
 	}),
 	table.column({
 		accessor: "domain",
@@ -18,9 +18,9 @@ const columns = table.createColumns([
 		cell: ({ value }) => value,
 		plugins: {
 			sort: {
-				disable: true
-			}
-		}
+				disable: true,
+			},
+		},
 	}),
 	table.column({
 		accessor: "createdAt",
@@ -29,13 +29,13 @@ const columns = table.createColumns([
 			value.toLocaleDateString("en-US", {
 				day: "2-digit",
 				month: "short",
-				year: "numeric"
+				year: "numeric",
 			}),
 		plugins: {
 			sort: {
-				disable: false
-			}
-		}
+				disable: false,
+			},
+		},
 	}),
 	table.column({
 		accessor: "updatedAt",
@@ -44,13 +44,13 @@ const columns = table.createColumns([
 			value.toLocaleDateString("en-US", {
 				day: "2-digit",
 				month: "short",
-				year: "numeric"
+				year: "numeric",
 			}),
 		plugins: {
 			sort: {
-				disable: false
-			}
-		}
+				disable: false,
+			},
+		},
 	}),
 	table.column({
 		accessor: (item) => item,
@@ -58,14 +58,14 @@ const columns = table.createColumns([
 		//@ts-ignore Wait for svelte 5 release
 		cell: ({ value }) =>
 			createRender(DataTableActions, {
-				selected: value
+				selected: value,
 			}),
 		plugins: {
 			sort: {
-				disable: true
-			}
-		}
-	})
+				disable: true,
+			},
+		},
+	}),
 ]);
 </script>
 

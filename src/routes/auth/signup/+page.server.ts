@@ -16,7 +16,10 @@ import { env } from "$env/dynamic/private";
 // ============================================================================
 
 export const load: PageServerLoad = async ({ locals }) => {
-	if (Boolean(env.AUTH_SIGNUP) === false || locals.context.type === "landlord") {
+	if (
+		Boolean(env.AUTH_SIGNUP) === false ||
+		locals.context.type === "landlord"
+	) {
 		error(404);
 	}
 };
@@ -39,10 +42,15 @@ export const actions: Actions = {
 			return Toasty.fail(422, "Invalid email or password");
 		}
 
-		if (password.length < 8 || !/\d/.test(password) || !/[a-z]/.test(password) || !/[A-Z]/.test(password)) {
+		if (
+			password.length < 8 ||
+			!/\d/.test(password) ||
+			!/[a-z]/.test(password) ||
+			!/[A-Z]/.test(password)
+		) {
 			return Toasty.fail(
 				422,
-				"Password must be at least 8 characters long and contain at least one number, one lowercase letter, and one uppercase letter"
+				"Password must be at least 8 characters long and contain at least one number, one lowercase letter, and one uppercase letter",
 			);
 		}
 
@@ -53,10 +61,15 @@ export const actions: Actions = {
 		// Wait a random 25 - 400 ms to prevent timing attacks
 		// Returning immediately allows malicious actors to figure out valid usernames from response times
 		// By always returning the same / inconsistent response time, we can make it harder to figure out valid usernames
-		await new Promise((resolve) => setTimeout(resolve, 25 + Math.random() * 400));
+		await new Promise((resolve) =>
+			setTimeout(resolve, 25 + Math.random() * 400),
+		);
 
 		// Exists ?
-		if ((await context.db.select().from(users).where(eq(users.email, email))).length > 1) {
+		if (
+			(await context.db.select().from(users).where(eq(users.email, email)))
+				.length > 1
+		) {
 			return Toasty.fail(409, "Account with such an email already exists!");
 		}
 
@@ -69,7 +82,7 @@ export const actions: Actions = {
 					email,
 					id,
 					hash,
-					tfa: null
+					tfa: null,
 				})
 				.returning();
 			const createdUser = user.at(0);
@@ -84,9 +97,9 @@ export const actions: Actions = {
 		cookies.set("identity", user.id, {
 			path: "/",
 			secure: !dev,
-			sameSite: "strict"
+			sameSite: "strict",
 		});
 
 		redirect(302, "/auth/otp/setup");
-	}
+	},
 };

@@ -12,7 +12,7 @@ export * from "./shared";
 
 export const tenants = declareTable("tenants", {
 	domain: text("domain").notNull().unique(),
-	dbUri: jwtEncoded("db_uri").notNull()
+	dbUri: jwtEncoded("db_uri").notNull(),
 });
 
 export type TenantsType = typeof tenants.$inferSelect;

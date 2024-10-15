@@ -25,7 +25,7 @@ const RateUnitMap: Record<RateUnit, number> = {
 	s: 1000,
 	m: 60000,
 	h: 60 * 60000,
-	d: 24 * 60 * 60000
+	d: 24 * 60 * 60000,
 };
 
 // Util Functions
@@ -72,10 +72,13 @@ export function useRetryAfter(
 		/** IP e.g: CLI, cURL, etc */
 		IP: [15, "h"] as Rate,
 		/** IP + User-Agent e.g: Firefox, Chrome, etc */
-		IPUA: [5, "m"] as Rate
-	}
+		IPUA: [5, "m"] as Rate,
+	},
 ) {
-	const maxTTL = Math.max(RateUnitMap[options.IP[1]], RateUnitMap[options.IPUA[1]]);
+	const maxTTL = Math.max(
+		RateUnitMap[options.IP[1]],
+		RateUnitMap[options.IPUA[1]],
+	);
 	const cache = new RateLimiter(maxTTL, Infinity);
 
 	async function isLimited(event: RequestEvent) {
@@ -91,7 +94,7 @@ export function useRetryAfter(
 		return {
 			limited,
 			hash: limited ? hash : null,
-			unit: targetRate[1]
+			unit: targetRate[1],
 		};
 	}
 
@@ -99,7 +102,7 @@ export function useRetryAfter(
 	function setHeaders(event: RequestEvent, limit: number, rate: number) {
 		event.setHeaders({
 			"x-ratelimit-remaining": (limit - rate).toString(),
-			"x-ratelimit-limit": limit.toString()
+			"x-ratelimit-limit": limit.toString(),
 		});
 	}
 
@@ -118,7 +121,7 @@ export function useRetryAfter(
 		const cached = await cache.add(hash, unit);
 		return {
 			isLimited: true,
-			retryAfter: toSeconds(cached.retryAfter - Date.now())
+			retryAfter: toSeconds(cached.retryAfter - Date.now()),
 		};
 	}
 
@@ -126,7 +129,7 @@ export function useRetryAfter(
 		get cache() {
 			return cache;
 		},
-		check
+		check,
 	};
 }
 
@@ -140,7 +143,7 @@ class RateLimiter {
 		this.cache = new TTLCache({
 			ttl: maxTTL,
 			max: maxItems,
-			noUpdateTTL: true
+			noUpdateTTL: true,
 		});
 	}
 
@@ -159,7 +162,7 @@ class RateLimiter {
 		const retryAfter = Date.now() + ttl;
 		const cacheValue: CacheValue = {
 			rate: 1,
-			retryAfter
+			retryAfter,
 		};
 
 		this.cache.set(hash, cacheValue, { ttl });

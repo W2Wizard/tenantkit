@@ -8,9 +8,9 @@ export default {
 	dialect: "postgresql",
 	migrations: {
 		table: "migrations", // default `__drizzle_migrations`,
-		schema: "public" // used in PostgreSQL only and default to `drizzle`
+		schema: "public", // used in PostgreSQL only and default to `drizzle`
 	},
 	dbCredentials: {
-		url: process.env.TENANT_DB_URL ?? "None"
-	}
+		url: process.env.TENANT_DB_URL ?? "None",
+	},
 } satisfies Config;

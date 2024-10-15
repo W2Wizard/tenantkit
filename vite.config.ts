@@ -11,9 +11,9 @@ export default defineConfig({
 			targets: [
 				{
 					src: "drizzle/*", // Source folder
-					dest: "drizzle" // Destination folder in the build output
-				}
-			]
-		})
-	]
+					dest: "drizzle", // Destination folder in the build output
+				},
+			],
+		}),
+	],
 });

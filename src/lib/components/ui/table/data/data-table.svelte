@@ -1,5 +1,10 @@
 <script lang="ts" generics="T">
-import { createTable, Render, Subscribe, type TableViewModel } from "svelte-headless-table";
+import {
+	createTable,
+	Render,
+	Subscribe,
+	type TableViewModel,
+} from "svelte-headless-table";
 import { ArrowUpDown } from "lucide-svelte/icons";
 import type { Column, HeaderCell } from "svelte-headless-table";
 import { readable } from "svelte/store";
@@ -15,7 +20,8 @@ interface Props {
 
 let { table, columns }: Props = $props();
 const model = table.createViewModel(columns);
-const { headerRows, pageRows, tableAttrs, tableBodyAttrs, pluginStates } = model;
+const { headerRows, pageRows, tableAttrs, tableBodyAttrs, pluginStates } =
+	model;
 </script>
 
 <div class="mt-4 w-full rounded-md border shadow-sm">

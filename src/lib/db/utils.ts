@@ -7,7 +7,7 @@ import {
 	primaryKey,
 	timestamp,
 	uuid,
-	type PgColumnBuilderBase
+	type PgColumnBuilderBase,
 } from "drizzle-orm/pg-core";
 import jwt from "jsonwebtoken";
 
@@ -20,18 +20,23 @@ import jwt from "jsonwebtoken";
  * @param columns Any other additional columns to be defined.
  * @returns A new PGTable
  */
-export const declareTable = <TTableName extends string, TColumnsMap extends Record<string, PgColumnBuilderBase>>(
+export const declareTable = <
+	TTableName extends string,
+	TColumnsMap extends Record<string, PgColumnBuilderBase>,
+>(
 	name: TTableName,
-	columns: TColumnsMap
+	columns: TColumnsMap,
 ) => {
 	return pgTable(name, {
 		id: uuid("id").default(sql`uuid_generate_v7()`).primaryKey(),
-		createdAt: timestamp("created_at", { mode: "date", precision: 3 }).defaultNow().notNull(),
+		createdAt: timestamp("created_at", { mode: "date", precision: 3 })
+			.defaultNow()
+			.notNull(),
 		updatedAt: timestamp("updated_at", { mode: "date", precision: 3 })
 			.defaultNow()
 			.notNull()
 			.$onUpdate(() => new Date()),
-		...columns
+		...columns,
 	});
 };
 
@@ -45,7 +50,10 @@ type PGBaseTable = ReturnType<typeof declareTable>;
  * @param secondTable The second table to join.
  * @returns A new table to be exported alongside with the relation that is being established.
  */
-export function joinTable<T1 extends PgTable, T2 extends PgTable>(firstTable: T1, secondTable: T2) {
+export function joinTable<T1 extends PgTable, T2 extends PgTable>(
+	firstTable: T1,
+	secondTable: T2,
+) {
 	const nameA = getTableName(firstTable);
 	const nameB = getTableName(secondTable);
 	const keyA = `${nameA}Id`;
@@ -60,23 +68,23 @@ export function joinTable<T1 extends PgTable, T2 extends PgTable>(firstTable: T1
 				.references(() => firstTable.id),
 			[keyB]: uuid(`${nameB}_id`)
 				.notNull()
-				.references(() => secondTable.id)
+				.references(() => secondTable.id),
 		},
 		(t) => ({
-			pk: primaryKey({ columns: [t[keyA], t[keyB]] })
-		})
+			pk: primaryKey({ columns: [t[keyA], t[keyB]] }),
+		}),
 	);
 
 	/** The relations established for the join table */
 	const joinRelations = relations(joinTable, ({ one }) => ({
 		tableA: one(firstTable, {
 			fields: [joinTable[keyA]],
-			references: [firstTable.id]
+			references: [firstTable.id],
 		}),
 		tableB: one(secondTable, {
 			fields: [joinTable[keyB]],
-			references: [secondTable.id]
-		})
+			references: [secondTable.id],
+		}),
 	}));
 
 	return { table: joinTable, relations: joinRelations };
@@ -99,5 +107,5 @@ export const jwtEncoded = customType<{ data: string }>({
 	},
 	toDriver(value: string) {
 		return jwt.sign(value, process.env.APP_SECRET ?? "");
-	}
+	},
 });

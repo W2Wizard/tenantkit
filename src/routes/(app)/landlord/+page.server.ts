@@ -19,7 +19,7 @@ export const load: PageServerLoad = async ({ locals, depends }) => {
 
 	const { db } = locals.context;
 	return {
-		tenants: db.select().from(tenants)
+		tenants: db.select().from(tenants),
 	};
 };
 
@@ -27,7 +27,7 @@ export const load: PageServerLoad = async ({ locals, depends }) => {
 // ============================================================================
 
 const tenantSchema = z.object({
-	id: z.string().uuid().readonly()
+	id: z.string().uuid().readonly(),
 });
 
 // ============================================================================
@@ -36,13 +36,17 @@ export const actions: Actions = {
 	delete: async (event) => {
 		const {
 			request,
-			locals: { context }
+			locals: { context },
 		} = await validate(event);
 		const formData = Object.fromEntries(await request.formData());
 		const form = await tenantSchema.safeParseAsync(formData);
 
 		if (!form.success) {
-			return Toasty.fail(400, "Invalid form", FormSchema.formatErrors(form.error.issues));
+			return Toasty.fail(
+				400,
+				"Invalid form",
+				FormSchema.formatErrors(form.error.issues),
+			);
 		}
 
 		const [r, e] = await ensure(Tenants.remove(context, form.data.id));
@@ -55,7 +59,7 @@ export const actions: Actions = {
 	create: async (event) => {
 		const {
 			request,
-			locals: { context }
+			locals: { context },
 		} = await validate(event);
 
 		const formData = await request.formData();
@@ -67,5 +71,5 @@ export const actions: Actions = {
 		const [r, e] = await ensure(Tenants.create(context, name));
 		if (e) return Toasty.fail(400, e.message);
 		return Toasty.success("Tenant created");
-	}
+	},
 };

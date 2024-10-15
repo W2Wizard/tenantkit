@@ -14,7 +14,10 @@ import { eq } from "drizzle-orm";
 import { sessions, users } from "@/db/schemas/shared";
 import type { Sessions } from "@/db/schemas/shared";
 import type { User } from "./tenancy";
-import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from "@oslojs/encoding";
+import {
+	encodeBase32LowerCaseNoPadding,
+	encodeHexLowerCase,
+} from "@oslojs/encoding";
 import type { Cookies, RequestEvent } from "@sveltejs/kit";
 
 // ============================================================================
@@ -36,9 +39,9 @@ export function createLucia(db: PostgresJsDatabase<any>, domain: string) {
 			attributes: {
 				secure: !dev,
 				sameSite: "strict",
-				domain
-			}
-		}
+				domain,
+			},
+		},
 		// getUserAttributes: (attributes) => {
 		// 	return {
 		// 		requires2fa: attributes.tfa !== null
@@ -57,13 +60,17 @@ export namespace Auth {
 	/** The length of the verification code. */
 	export const VERIFICATION_CODE_LENGTH = 8;
 	/** The length of a valid session. */
-	export const SESSION_EXPIRES = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
+	export const SESSION_EXPIRES = new Date(
+		Date.now() + 1000 * 60 * 60 * 24 * 30,
+	);
 	/** The session cookie name */
 	export const SESSION_COOKIE = "session";
 
 	const hasher = new Bun.CryptoHasher("sha256");
 
-	export type SessionValidationResult = { session: Sessions; user: User } | { session: null; user: null };
+	export type SessionValidationResult =
+		| { session: Sessions; user: User }
+		| { session: null; user: null };
 
 	/**
 	 * Generates a new session token
@@ -83,11 +90,15 @@ export namespace Auth {
 	 * @param userId
 	 * @returns
 	 */
-	export async function createSession(ctx: TenancyContext, token: string, userId: string): Promise<Sessions> {
+	export async function createSession(
+		ctx: TenancyContext,
+		token: string,
+		userId: string,
+	): Promise<Sessions> {
 		const session: Sessions = {
 			userId,
 			id: hasher.update(token).digest().toString("base64"),
-			expiresAt: SESSION_EXPIRES
+			expiresAt: SESSION_EXPIRES,
 		};
 
 		await ctx.db.insert(sessions).values(session);
@@ -100,7 +111,10 @@ export namespace Auth {
 	 * @param token
 	 * @returns
 	 */
-	export async function validateSessionToken(ctx: TenancyContext, token: string): Promise<SessionValidationResult> {
+	export async function validateSessionToken(
+		ctx: TenancyContext,
+		token: string,
+	): Promise<SessionValidationResult> {
 		const sessionId = hasher.update(token).digest().toString("base64");
 		const result = await ctx.db
 			.select({ user: users, session: sessions })
@@ -121,7 +135,7 @@ export namespace Auth {
 			await ctx.db
 				.update(sessions)
 				.set({
-					expiresAt: session.expiresAt
+					expiresAt: session.expiresAt,
 				})
 				.where(eq(sessions.id, session.id));
 		}
@@ -142,7 +156,10 @@ export namespace Auth {
 	 * @param ctx
 	 * @param sessionId
 	 */
-	export async function invalidateSessions(ctx: TenancyContext, userId: string) {
+	export async function invalidateSessions(
+		ctx: TenancyContext,
+		userId: string,
+	) {
 		await ctx.db.delete(sessions).where(eq(sessions.userId, userId));
 	}
 
@@ -161,7 +178,7 @@ export namespace Auth {
 			await tx.insert(resetTokens).values({
 				id: tokenId,
 				userId,
-				expiresAt
+				expiresAt,
 			});
 
 			return tokenId;
@@ -174,16 +191,25 @@ export namespace Auth {
 	 * @param email The user's email.
 	 * @returns The verification code.
 	 */
-	export async function createVerificationCode(ctx: TenancyContext, userId: string, email: string) {
+	export async function createVerificationCode(
+		ctx: TenancyContext,
+		userId: string,
+		email: string,
+	) {
 		return await ctx.db.transaction(async (tx) => {
-			await tx.delete(verificationTokens).where(eq(verificationTokens.userId, userId));
-			const code = generateRandomString(VERIFICATION_CODE_LENGTH, alphabet("0-9"));
+			await tx
+				.delete(verificationTokens)
+				.where(eq(verificationTokens.userId, userId));
+			const code = generateRandomString(
+				VERIFICATION_CODE_LENGTH,
+				alphabet("0-9"),
+			);
 
 			await tx.insert(verificationTokens).values({
 				expiresAt: createDate(new TimeSpan(5, "m")),
 				userId,
 				email,
-				code
+				code,
 			});
 
 			return code;
@@ -198,14 +224,19 @@ export namespace Auth {
 	 * @param token
 	 * @param expiresAt
 	 */
-	export function setCookie(cookies: Cookies, token: string, expiresAt: Date = SESSION_EXPIRES, domain?: string) {
+	export function setCookie(
+		cookies: Cookies,
+		token: string,
+		expiresAt: Date = SESSION_EXPIRES,
+		domain?: string,
+	) {
 		cookies.set(SESSION_COOKIE, token, {
 			httpOnly: true,
 			sameSite: "lax",
 			domain,
 			expires: expiresAt,
 			path: "/",
-			secure: !dev
+			secure: !dev,
 		});
 	}
 
@@ -219,7 +250,7 @@ export namespace Auth {
 			sameSite: "lax",
 			secure: !dev,
 			maxAge: 0,
-			path: "/"
+			path: "/",
 		});
 	}
 }

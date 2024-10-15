@@ -29,5 +29,5 @@ export const actions: Actions = {
 		await Auth.invalidateSession(locals.context, locals.session.id);
 		Auth.deleteCookie(cookies);
 		redirect(302, "/auth/signin");
-	}
+	},
 };

@@ -1,9 +1,9 @@
 {
 	"$schema": "https://biomejs.dev/schemas/1.9.3/schema.json",
 	"vcs": {
-		"enabled": false,
+		"enabled": true,
 		"clientKind": "git",
-		"useIgnoreFile": false
+		"useIgnoreFile": true
 	},
 	"files": {
 		"ignoreUnknown": false,
@@ -15,10 +15,17 @@
 		"formatWithErrors": false,
 		"indentStyle": "tab",
 		"indentWidth": 2,
-		"lineWidth": 120,
+		"lineWidth": 80,
 		"attributePosition": "auto",
 		"bracketSpacing": true,
-		"ignore": ["**/package-lock.json", "**/pnpm-lock.yaml", "**/yarn.lock", "**/*.json", ".svelte-kit", "build"]
+		"ignore": [
+			"**/package-lock.json",
+			"**/pnpm-lock.yaml",
+			"**/yarn.lock",
+			"**/*.json",
+			".svelte-kit",
+			"build"
+		]
 	},
 	"organizeImports": {
 		"enabled": true
@@ -64,7 +71,8 @@
 				"noVar": "error",
 				"useShorthandArrayType": "error",
 				"useAsConstAssertion": "error",
-				"useBlockStatements": "off"
+				"useBlockStatements": "off",
+				"useSelfClosingElements": "error"
 			},
 			"suspicious": {
 				"noImplicitAnyLet": "error",
@@ -100,22 +108,8 @@
 		},
 		"ignore": ["build/", ".svelte-kit/", "dist/"]
 	},
-	"javascript": {
-		"formatter": {
-			"jsxQuoteStyle": "double",
-			"quoteProperties": "asNeeded",
-			"trailingCommas": "none",
-			"semicolons": "always",
-			"arrowParentheses": "always",
-			"bracketSameLine": false,
-			"quoteStyle": "double",
-			"attributePosition": "auto",
-			"bracketSpacing": true
-		}
-	},
 	"overrides": [
 		{
-			"ignore": ["build/", ".svelte-kit/", "dist/"],
 			"include": ["*.svelte", "*.astro", "*.vue"],
 			"linter": {
 				"rules": {
@@ -124,76 +118,6 @@
 						"useImportType": "off"
 					}
 				}
-			}
-		},
-		{
-			"include": ["*.svelte"]
-		},
-		{
-			"include": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
-			"linter": {
-				"rules": {
-					"correctness": {
-						"noConstAssign": "off",
-						"noGlobalObjectCalls": "off",
-						"noInvalidBuiltinInstantiation": "off",
-						"noInvalidConstructorSuper": "off",
-						"noNewSymbol": "off",
-						"noSetterReturn": "off",
-						"noUndeclaredVariables": "off",
-						"noUnreachable": "off",
-						"noUnreachableSuper": "off"
-					},
-					"style": {
-						"noArguments": "error",
-						"noVar": "error",
-						"useConst": "error"
-					},
-					"suspicious": {
-						"noDuplicateClassMembers": "off",
-						"noDuplicateObjectKeys": "off",
-						"noDuplicateParameters": "off",
-						"noFunctionAssign": "off",
-						"noImportAssign": "off",
-						"noRedeclare": "off",
-						"noUnsafeNegation": "off",
-						"useGetterReturn": "off"
-					}
-				}
-			}
-		},
-		{
-			"include": ["*.svelte", "**/*.svelte"],
-			"javascript": {
-				"globals": []
-			},
-			"linter": {
-				"rules": {
-					"correctness": {
-						"noInnerDeclarations": "off",
-						"noSelfAssign": "off"
-					}
-				}
-			}
-		},
-		{
-			"include": ["*.svelte", "**/*.svelte"],
-			"javascript": {
-				"globals": []
-			},
-			"linter": {
-				"rules": {
-					"correctness": {
-						"noInnerDeclarations": "off",
-						"noSelfAssign": "off"
-					}
-				}
-			}
-		},
-		{
-			"include": ["**/*.svelte"],
-			"javascript": {
-				"globals": []
 			}
 		}
 	]

@@ -1,7 +1,11 @@
 <script lang="ts">
 import { Button } from "../../button";
 import * as DropdownMenu from "../../dropdown-menu";
-import { ChevronDown, ChevronDown as CaretSort, CircleEllipsis } from "lucide-svelte";
+import {
+	ChevronDown,
+	ChevronDown as CaretSort,
+	CircleEllipsis,
+} from "lucide-svelte";
 
 export let id: string;
 </script>
