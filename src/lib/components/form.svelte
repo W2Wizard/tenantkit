@@ -36,7 +36,7 @@ let {
 
 export const onSubmit: SubmitFunction = ({ cancel }) => {
 	if (beforeSubmit?.() === false) {
-		cancel();
+		return cancel();
 	}
 
 	onLoading?.((isLoading = true));

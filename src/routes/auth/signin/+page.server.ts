@@ -5,7 +5,7 @@
 
 import type { Actions, PageServerLoad } from "./$types";
 import { error, redirect } from "@sveltejs/kit";
-import { Toasty } from "@/utils";
+import { Toasty, validate } from "@/utils";
 import { users } from "@/db/schemas/shared";
 import { eq } from "drizzle-orm";
 import { dev } from "$app/environment";
@@ -13,24 +13,22 @@ import { env } from "$env/dynamic/private";
 
 // ============================================================================
 
-export const load: PageServerLoad = async ({ locals }) => {
-	if (locals.user) return redirect(302, "/");
+export const load: PageServerLoad = async ({
+	locals: { context, session },
+}) => {
+	if (session) return redirect(302, "/");
+
 	return {
-		tenant: locals.context.type,
-		allowSignup: env.AUTH_SIGNUP && locals.context.type !== "landlord",
-		allowForget: env.AUTH_FORGOT && locals.context.type !== "landlord",
+		allowSignup: env.AUTH_SIGNUP && context.type !== "landlord",
+		allowForget: env.AUTH_FORGOT && context.type !== "landlord",
 	};
 };
 
+// ============================================================================
+
 export const actions: Actions = {
 	default: async (event) => {
-		const check = await event.locals.limiter.check(event);
-		if (check.isLimited) {
-			error(429, `Try again in ${check.retryAfter} seconds`);
-			// return Toasty.fail(429, `Try again in ${check.retryAfter} seconds`);
-		}
-
-		const { request, cookies, locals } = event;
+		const { request, cookies, locals } = await validate(event);
 		const formData = await request.formData();
 		const email = formData.get("email")?.toString();
 		const password = formData.get("password")?.toString();

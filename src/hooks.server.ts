@@ -56,6 +56,7 @@ const handleTenant: Handle = async ({ event, resolve }) => {
 		key: string,
 		uri: string,
 		type: "landlord" | "tenant",
+		tenant?: landlordSchema.TenantsType,
 	) => {
 		if (!connections.has(key)) {
 			const schema =
@@ -67,11 +68,14 @@ const handleTenant: Handle = async ({ event, resolve }) => {
 			const db = drizzle(postgres(uri, { max: 24 }), { schema }) as
 				| LandlordDB
 				| TenantDB;
+
 			// @ts-ignore
 			connections.set(key, {
 				type,
 				db,
 				domain: event.url.hostname,
+				// @ts-ignore
+				tenant,
 			});
 		}
 		return connections.get(key)!;
@@ -102,6 +106,7 @@ const handleTenant: Handle = async ({ event, resolve }) => {
 		event.url.hostname,
 		tenant.dbUri,
 		"tenant",
+		tenant,
 	);
 	return resolve(event);
 };
@@ -163,8 +168,7 @@ export const handleAuth: Handle = async ({ event, resolve }) => {
 	// Landlord application must only have access to the landlord route
 	if (
 		!event.url.pathname.startsWith("/landlord") &&
-		event.locals.context.type === "landlord" &&
-		!event.url.pathname.startsWith("/auth")
+		event.locals.context.type === "landlord"
 	) {
 		redirect(303, "/landlord");
 	}

@@ -18,7 +18,6 @@ import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index";
 import { Input } from "$lib/components/ui/input/index";
 import * as Sheet from "$lib/components/ui/sheet/index";
 import { toggleMode } from "mode-watcher";
-import Form from "@/components/form.svelte";
 
 const { children } = $props();
 

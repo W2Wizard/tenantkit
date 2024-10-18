@@ -4,6 +4,7 @@ import DataTableActions from "./tenant-table-actions.svelte";
 import DataTable from "@/components/ui/table/data/data-table.svelte";
 import { createRender } from "svelte-headless-table";
 import { tenants } from "../state.svelte";
+import { PUBLIC_APP_DOMAIN } from "$env/static/public";
 
 const table = defineTable(tenants);
 const columns = table.createColumns([
@@ -25,7 +26,7 @@ const columns = table.createColumns([
 	table.column({
 		accessor: "domain",
 		header: "Sub-Domain",
-		cell: ({ value }) => value,
+		cell: ({ value }) => `${value}.${PUBLIC_APP_DOMAIN}`,
 		plugins: {
 			sort: {
 				disable: true,

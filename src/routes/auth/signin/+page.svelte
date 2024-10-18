@@ -11,7 +11,14 @@ const { data } = $props();
 <div class="mx-auto grid w-[350px] gap-6">
 	<div class="grid gap-2 text-center">
 		<h1 class="text-3xl font-bold">
-			Login into <span class="capitalize">{data.tenant}</span>
+			Login into
+			<span class="capitalize">
+				{#if data.type === "tenant"}
+					{data.tenant?.name}
+				{:else}
+					Landlord
+				{/if}
+			</span>
 		</h1>
 		<p class="text-balance text-muted-foreground">
 			Enter your email below to login to your account

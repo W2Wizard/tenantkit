@@ -28,10 +28,20 @@ import Separator from "@/components/ui/separator/separator.svelte";
 import { invalidate } from "$app/navigation";
 import * as Alert from "@/components/ui/alert";
 import { PUBLIC_APP_DOMAIN } from "$env/static/public";
+import { dialog } from "@/components/dialog/state.svelte";
 
 const { data } = $props();
 
 let pageState: PaginationState;
+
+async function handle() {
+	console.log(
+		await dialog.confirm({
+			title: "HAHAH",
+			message: "YOOOOOOOOO",
+		}),
+	);
+}
 
 const loadTenants = async () =>
 	($tenants = await Promise.resolve(data.tenants));
@@ -39,32 +49,43 @@ const loadTenants = async () =>
 
 <div class="flex items-center">
 	<div class=" flex items-center gap-2">
+		<Button on:click={handle}>Alert</Button>
 		<Popover.Root>
 			<Popover.Trigger asChild let:builder>
-			 <Button builders={[builder]} size="sm" class="h-7 gap-1">
-				<CirclePlus class="h-3.5 w-3.5" />
-				<span class="sr-only sm:not-sr-only sm:whitespace-nowrap">
-					Add Tenant
-				</span>
-			</Button>
+				<Button builders={[builder]} size="sm" class="h-7 gap-1">
+					<CirclePlus class="h-3.5 w-3.5" />
+					<span class="sr-only sm:not-sr-only sm:whitespace-nowrap">
+						Add Tenant
+					</span>
+				</Button>
 			</Popover.Trigger>
 			<Popover.Content class="w-80">
-				<Form class="grid gap-4" action="?/create" onResult={async() => await invalidate("landlord:tenants")}>
+				<Form
+					class="grid gap-4"
+					action="?/create"
+					onResult={async () => await invalidate("landlord:tenants")}
+				>
 					<div class="space-y-2">
-				 		<h4 class="font-medium leading-none">Tenant</h4>
-				 		<p class="text-muted-foreground text-sm">
-							Create a new tenant, upon saving a new database will created and the tenant is available.
-				 		</p>
-						</div>
-						 <div class="grid grid-cols-3 items-center gap-4">
-								<Label for="width">Name</Label>
-								<Input id="width" name="name" placeholder="New Tenant" class="col-span-2 h-8" />
-						 </div>
-						<Separator class="my-2" />
+						<h4 class="font-medium leading-none">Tenant</h4>
+						<p class="text-muted-foreground text-sm">
+							Create a new tenant, upon saving a new database will created and
+							the tenant is available.
+						</p>
+					</div>
+					<div class="grid grid-cols-3 items-center gap-4">
+						<Label for="width">Name</Label>
+						<Input
+							id="width"
+							name="name"
+							placeholder="New Tenant"
+							class="col-span-2 h-8"
+						/>
+					</div>
+					<Separator class="my-2" />
 					<Button type="submit">Save changes</Button>
 				</Form>
 			</Popover.Content>
-		 </Popover.Root>
+		</Popover.Root>
 		<Button size="sm" variant="outline" class="h-7 gap-1">
 			<File class="h-3.5 w-3.5" />
 			<span class="sr-only sm:not-sr-only sm:whitespace-nowrap"> Export </span>
@@ -87,13 +108,14 @@ const loadTenants = async () =>
 			</div>
 		{:then}
 			{#if $tenants.length <= 0}
-			<Alert.Root variant="info">
-				<UsersRound class="size-4" />
-				<Alert.Title>No tenants</Alert.Title>
-				<Alert.Description>
-					At the moment you have no available tenants to manage. Feel free to add one.
-				</Alert.Description>
-			</Alert.Root>
+				<Alert.Root variant="info">
+					<UsersRound class="size-4" />
+					<Alert.Title>No tenants</Alert.Title>
+					<Alert.Description>
+						At the moment you have no available tenants to manage. Feel free to
+						add one.
+					</Alert.Description>
+				</Alert.Root>
 			{:else}
 				<TenantTable></TenantTable>
 			{/if}
@@ -111,38 +133,56 @@ const loadTenants = async () =>
 </Card.Root>
 
 <!-- Edit tenant sheet -->
-<Sheet.Root open={$tenant !== null} onOpenChange={(v) => $tenant = v ? $tenant : null}>
-  <Sheet.Content side="left">
-    <Sheet.Header>
-      <Sheet.Title>Edit Tenant</Sheet.Title>
-      <Sheet.Description>
-        Set Tenant data
-      </Sheet.Description>
-    </Sheet.Header>
-    <div class="grid gap-4 py-4">
+<Sheet.Root
+	open={$tenant !== null}
+	onOpenChange={(v) => ($tenant = v ? $tenant : null)}
+>
+	<Sheet.Content side="right">
+		<Sheet.Header>
+			<Sheet.Title>Edit Tenant</Sheet.Title>
+			<Sheet.Description>Set Tenant data</Sheet.Description>
+		</Sheet.Header>
+		<div class="grid gap-4 py-4">
 			{#if $tenant}
 				<div class="flex flex-col gap-2 items-start">
 					<Label for="id" class="text-right">Id</Label>
-					<Input id="id" name="id" readonly value={$tenant.id} class="col-span-3" />
+					<Input
+						id="id"
+						name="id"
+						readonly
+						disabled
+						value={$tenant.id}
+						class="col-span-3"
+					/>
 				</div>
 				<div class="flex flex-col gap-2 items-start">
 					<Label for="domain" class="text-right">Name</Label>
-					<Input id="domain" name="domain" value={$tenant.name} class="col-span-3" />
+					<Input
+						id="domain"
+						name="domain"
+						value={$tenant.name}
+						class="col-span-3"
+					/>
 				</div>
 				<div class="flex flex-col gap-2 items-start">
 					<Label for="domain" class="text-right">Domain</Label>
 					<div class="flex w-full gap-2 items-center">
-						<Input id="domain" name="domain" value={$tenant.domain} class="col-span-3 flex-1" />
+						<Input
+							id="domain"
+							name="domain"
+							value={$tenant.domain}
+							class="col-span-3 flex-1"
+						/>
 						<span>.{PUBLIC_APP_DOMAIN}</span>
 					</div>
 				</div>
 			{/if}
-    </div>
-		<Separator class="my-2"/>
-    <Sheet.Footer>
-      <Sheet.Close asChild let:builder>
-        <Button builders={[builder]} type="submit">Save changes</Button>
-      </Sheet.Close>
-    </Sheet.Footer>
-  </Sheet.Content>
+		</div>
+		<Separator class="my-2" />
+		<Sheet.Footer>
+			<Sheet.Close asChild let:builder>
+				<Button builders={[builder]} type="submit">Save changes</Button>
+			</Sheet.Close>
+		</Sheet.Footer>
+	</Sheet.Content>
 </Sheet.Root>

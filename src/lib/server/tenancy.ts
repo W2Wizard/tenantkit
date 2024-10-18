@@ -53,7 +53,6 @@ namespace Tenants {
 		const dbName = `tenant_${slug.replaceAll("-", "_")}`;
 		const tenantURL = `postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${dbName}`;
 
-		console.log(slug, tenantURL, dbName);
 		await ctx.db.execute(sql`CREATE DATABASE ${sql.raw(dbName)}`);
 		await ctx.db.insert(tenants).values({
 			name,

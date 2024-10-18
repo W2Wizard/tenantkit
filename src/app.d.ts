@@ -27,6 +27,7 @@ declare global {
 	interface TenantContext extends BaseContext {
 		type: "tenant";
 		db: TenantDB;
+		tenant: landlord.TenantsType;
 	}
 
 	/** Union of possible tenancy contexts */
