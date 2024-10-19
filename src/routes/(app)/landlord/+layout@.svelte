@@ -1,15 +1,15 @@
 <script lang="ts">
-	import Package2 from "lucide-svelte/icons/package-2";
-	import Search from "lucide-svelte/icons/search";
-	import Sun from "lucide-svelte/icons/sun";
-	import Moon from "lucide-svelte/icons/moon";
-	import { Button } from "$lib/components/ui/button/index.js";
-	import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
-	import { Input } from "$lib/components/ui/input/index.js";
-	import * as Tooltip from "$lib/components/ui/tooltip/index.js";
-	import { toggleMode } from "mode-watcher";
+import Package2 from "lucide-svelte/icons/package-2";
+import Search from "lucide-svelte/icons/search";
+import Sun from "lucide-svelte/icons/sun";
+import Moon from "lucide-svelte/icons/moon";
+import { Button } from "$lib/components/ui/button/index.js";
+import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
+import { Input } from "$lib/components/ui/input/index.js";
+import * as Tooltip from "$lib/components/ui/tooltip/index.js";
+import { toggleMode } from "mode-watcher";
 
-	const { children } = $props();
+const { children } = $props();
 </script>
 
 {#snippet Link(href: string, text: string)}

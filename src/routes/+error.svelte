@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from "$app/stores";
+import { page } from "$app/stores";
 </script>
 
 <main class="error-page">
@@ -10,23 +10,23 @@
 </main>
 
 <style>
-	.error-page {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		height: 100dvh;
-		text-align: center;
-		/* background-color: #f8d7da;
+.error-page {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100dvh;
+	text-align: center;
+	/* background-color: #f8d7da;
 		color: #721c24; */
-	}
+}
 
-	h1 {
-		font-size: 3rem;
-		margin: 0;
-	}
+h1 {
+	font-size: 3rem;
+	margin: 0;
+}
 
-	p {
-		font-size: 1.5rem;
-	}
+p {
+	font-size: 1.5rem;
+}
 </style>

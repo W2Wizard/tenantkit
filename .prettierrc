@@ -5,6 +5,10 @@
 	"singleQuote": false,
 	"printWidth": 100,
 	"trailingComma": "es5",
+	"svelteSortOrder": "options-scripts-markup-styles",
+	"svelteBracketNewLine": false,
+	"svelteAllowShorthand": true,
+	"svelteIndentScriptAndStyle": false,
 	"plugins": ["prettier-plugin-svelte"],
 	"overrides": [
 		{

@@ -1,31 +1,31 @@
 <script lang="ts">
-	import { Ellipsis, Pen, Trash2, Filter, Banknote } from "lucide-svelte/icons";
-	import { Button } from "$lib/components/ui/button";
-	import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
-	import type { TenantsType } from "@/db/schemas/landlord";
-	import { tenant } from "../state.svelte";
-	import Form from "@/components/form.svelte";
-	import { invalidate } from "$app/navigation";
-	import { dialog } from "@/components/dialog/state.svelte";
+import { Ellipsis, Pen, Trash2, Filter, Banknote } from "lucide-svelte/icons";
+import { Button } from "$lib/components/ui/button";
+import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
+import type { TenantsType } from "@/db/schemas/landlord";
+import { tenant } from "../state.svelte";
+import Form from "@/components/form.svelte";
+import { invalidate } from "$app/navigation";
+import { dialog } from "@/components/dialog/state.svelte";
 
-	// Props
-	// ====================================================
+// Props
+// ====================================================
 
-	interface Props {
-		selected: TenantsType;
-	}
-	const { selected }: Props = $props();
+interface Props {
+	selected: TenantsType;
+}
+const { selected }: Props = $props();
 
-	// Functions
-	// ====================================================
+// Functions
+// ====================================================
 
-	async function beforeSubmit() {
-		return await dialog.confirm();
-	}
+async function beforeSubmit() {
+	return await dialog.confirm();
+}
 
-	function onResult() {
-		invalidate("landlord:tenants");
-	}
+function onResult() {
+	invalidate("landlord:tenants");
+}
 </script>
 
 <DropdownMenu.Root>

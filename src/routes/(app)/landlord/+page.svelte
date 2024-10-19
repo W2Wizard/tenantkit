@@ -1,34 +1,34 @@
 <script lang="ts">
-	import { CirclePlus, File, UsersRound, MessageSquareWarning } from "lucide-svelte/icons";
-	import { Badge } from "$lib/components/ui/badge/index.js";
-	import { Button } from "$lib/components/ui/button/index.js";
-	import * as Card from "$lib/components/ui/card/index.js";
-	import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
-	import { Input } from "$lib/components/ui/input/index.js";
-	import * as Sheet from "$lib/components/ui/sheet/index.js";
-	import * as Table from "$lib/components/ui/table/index.js";
-	import * as Tabs from "$lib/components/ui/tabs/index.js";
-	import * as Tooltip from "$lib/components/ui/tooltip/index.js";
-	import { type Icon } from "lucide-svelte";
-	import { type TenantsType } from "@/db/schemas/landlord";
-	import { tenant, tenants } from "./state.svelte";
-	import TenantTable from "./table/tenant-table.svelte";
-	import { Skeleton } from "@/components/ui/skeleton";
-	import type { PaginationState } from "svelte-headless-table/plugins";
-	import { Label } from "@/components/ui/label";
-	import * as Popover from "@/components/ui/popover";
-	import Form from "@/components/form.svelte";
-	import Separator from "@/components/ui/separator/separator.svelte";
-	import { invalidate } from "$app/navigation";
-	import * as Alert from "@/components/ui/alert";
-	import { PUBLIC_APP_DOMAIN } from "$env/static/public";
-	import { dialog } from "@/components/dialog";
+import { CirclePlus, File, UsersRound, MessageSquareWarning } from "lucide-svelte/icons";
+import { Badge } from "$lib/components/ui/badge/index.js";
+import { Button } from "$lib/components/ui/button/index.js";
+import * as Card from "$lib/components/ui/card/index.js";
+import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
+import { Input } from "$lib/components/ui/input/index.js";
+import * as Sheet from "$lib/components/ui/sheet/index.js";
+import * as Table from "$lib/components/ui/table/index.js";
+import * as Tabs from "$lib/components/ui/tabs/index.js";
+import * as Tooltip from "$lib/components/ui/tooltip/index.js";
+import { type Icon } from "lucide-svelte";
+import { type TenantsType } from "@/db/schemas/landlord";
+import { tenant, tenants } from "./state.svelte";
+import TenantTable from "./table/tenant-table.svelte";
+import { Skeleton } from "@/components/ui/skeleton";
+import type { PaginationState } from "svelte-headless-table/plugins";
+import { Label } from "@/components/ui/label";
+import * as Popover from "@/components/ui/popover";
+import Form from "@/components/form.svelte";
+import Separator from "@/components/ui/separator/separator.svelte";
+import { invalidate } from "$app/navigation";
+import * as Alert from "@/components/ui/alert";
+import { PUBLIC_APP_DOMAIN } from "$env/static/public";
+import { dialog } from "@/components/dialog";
 
-	const { data } = $props();
+const { data } = $props();
 
-	let pageState: PaginationState;
+let pageState: PaginationState;
 
-	const loadTenants = async () => ($tenants = await Promise.resolve(data.tenants));
+const loadTenants = async () => ($tenants = await Promise.resolve(data.tenants));
 </script>
 
 <div class="flex items-center">

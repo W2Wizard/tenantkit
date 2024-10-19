@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { ModeWatcher } from "mode-watcher";
+import { ModeWatcher } from "mode-watcher";
 
-	const { children } = $props();
+const { children } = $props();
 </script>
 
 <ModeWatcher />

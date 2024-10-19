@@ -1,18 +1,18 @@
 <script lang="ts">
-	import type { HTMLInputAttributes } from "svelte/elements";
-	import type { InputEvents } from "./index.js";
-	import { cn } from "$lib/utils.js";
+import type { HTMLInputAttributes } from "svelte/elements";
+import type { InputEvents } from "./index.js";
+import { cn } from "$lib/utils.js";
 
-	type $$Props = HTMLInputAttributes;
-	type $$Events = InputEvents;
+type $$Props = HTMLInputAttributes;
+type $$Events = InputEvents;
 
-	let className: $$Props["class"] = undefined;
-	export let value: $$Props["value"] = undefined;
-	export { className as class };
+let className: $$Props["class"] = undefined;
+export let value: $$Props["value"] = undefined;
+export { className as class };
 
-	// Workaround for https://github.com/sveltejs/svelte/issues/9305
-	// Fixed in Svelte 5, but not backported to 4.x.
-	export let readonly: $$Props["readonly"] = undefined;
+// Workaround for https://github.com/sveltejs/svelte/issues/9305
+// Fixed in Svelte 5, but not backported to 4.x.
+export let readonly: $$Props["readonly"] = undefined;
 </script>
 
 <input
@@ -42,25 +42,25 @@
 />
 
 <style>
-	input[type="search"]::-webkit-search-cancel-button {
-		-webkit-appearance: none;
-		height: 1em;
-		width: 1em;
-		border-radius: 50em;
-		background: url(https://pro.fontawesome.com/releases/v5.10.0/svgs/solid/times-circle.svg)
-			no-repeat 50% 50%;
-		background-size: contain;
-		opacity: 0;
-		pointer-events: none;
-		cursor: pointer;
-	}
+input[type="search"]::-webkit-search-cancel-button {
+	-webkit-appearance: none;
+	height: 1em;
+	width: 1em;
+	border-radius: 50em;
+	background: url(https://pro.fontawesome.com/releases/v5.10.0/svgs/solid/times-circle.svg)
+		no-repeat 50% 50%;
+	background-size: contain;
+	opacity: 0;
+	pointer-events: none;
+	cursor: pointer;
+}
 
-	input[type="search"]:focus::-webkit-search-cancel-button {
-		opacity: 0.3;
-		pointer-events: all;
-	}
+input[type="search"]:focus::-webkit-search-cancel-button {
+	opacity: 0.3;
+	pointer-events: all;
+}
 
-	input[type="search"].dark::-webkit-search-cancel-button {
-		filter: invert(1);
-	}
+input[type="search"].dark::-webkit-search-cancel-button {
+	filter: invert(1);
+}
 </style>

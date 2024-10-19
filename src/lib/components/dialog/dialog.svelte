@@ -1,24 +1,24 @@
 <script lang="ts">
-	import * as AlertDialog from "$lib/components/ui/alert-dialog";
-	import Button from "../ui/button/button.svelte";
-	import { dialog } from "./";
+import * as AlertDialog from "$lib/components/ui/alert-dialog";
+import Button from "../ui/button/button.svelte";
+import { dialog } from "./";
 
-	function resolve(value?: unknown) {
-		switch (dialog.current?.type) {
-			case "confirm": {
-				dialog.current?.resolve(Boolean(value));
-				break;
-			}
-			case "alert": {
-				dialog.current?.resolve();
-				break;
-			}
-			default:
-				break;
+function resolve(value?: unknown) {
+	switch (dialog.current?.type) {
+		case "confirm": {
+			dialog.current?.resolve(Boolean(value));
+			break;
 		}
-
-		dialog.current = null;
+		case "alert": {
+			dialog.current?.resolve();
+			break;
+		}
+		default:
+			break;
 	}
+
+	dialog.current = null;
+}
 </script>
 
 <AlertDialog.Root open={dialog.current !== null}>

@@ -1,10 +1,10 @@
 <script lang="ts">
-	import Form from "@/components/form.svelte";
-	import Button from "@/components/ui/button/button.svelte";
-	import { Card } from "@/components/ui/card/index";
-	import { Input } from "@/components/ui/input/index";
-	import { Separator } from "@/components/ui/separator/index";
-	import Phone from "lucide-svelte/icons/smartphone";
+import Form from "@/components/form.svelte";
+import Button from "@/components/ui/button/button.svelte";
+import { Card } from "@/components/ui/card/index";
+import { Input } from "@/components/ui/input/index";
+import { Separator } from "@/components/ui/separator/index";
+import Phone from "lucide-svelte/icons/smartphone";
 </script>
 
 <Form method="post" class="max-w-sm">
