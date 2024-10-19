@@ -1,15 +1,15 @@
 <script lang="ts">
-import Package2 from "lucide-svelte/icons/package-2";
-import Search from "lucide-svelte/icons/search";
-import Sun from "lucide-svelte/icons/sun";
-import Moon from "lucide-svelte/icons/moon";
-import { Button } from "$lib/components/ui/button/index.js";
-import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
-import { Input } from "$lib/components/ui/input/index.js";
-import * as Tooltip from "$lib/components/ui/tooltip/index.js";
-import { toggleMode } from "mode-watcher";
+	import Package2 from "lucide-svelte/icons/package-2";
+	import Search from "lucide-svelte/icons/search";
+	import Sun from "lucide-svelte/icons/sun";
+	import Moon from "lucide-svelte/icons/moon";
+	import { Button } from "$lib/components/ui/button/index.js";
+	import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
+	import { Input } from "$lib/components/ui/input/index.js";
+	import * as Tooltip from "$lib/components/ui/tooltip/index.js";
+	import { toggleMode } from "mode-watcher";
 
-const { children } = $props();
+	const { children } = $props();
 </script>
 
 {#snippet Link(href: string, text: string)}
@@ -28,7 +28,6 @@ const { children } = $props();
 		<Tooltip.Content side="right">{text}</Tooltip.Content>
 	</Tooltip.Root>
 {/snippet}
-
 
 <div class="flex min-h-screen w-full flex-col bg-muted/20">
 	<aside class="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">

@@ -9,13 +9,7 @@ import { tenants, type TenantsUpdate } from "@/db/schemas/landlord";
 import type { UsersType } from "@/db/schemas/shared";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import { drizzle } from "drizzle-orm/postgres-js";
-import {
-	DB_HOST,
-	DB_PASSWORD,
-	DB_PORT,
-	DB_URL,
-	DB_USER,
-} from "$env/static/private";
+import { DB_HOST, DB_PASSWORD, DB_PORT, DB_URL, DB_USER } from "$env/static/private";
 import * as tenantSchema from "@/db/schemas/tenant";
 
 // Types
@@ -103,20 +97,17 @@ namespace Tenants {
 	 * @param d
 	 * @returns
 	 */
-	export async function update(
-		ctx: LandlordContext,
-		id: string,
-		d: TenantsUpdate,
-	) {
-		if (d.domain && Tenants.findByDomain(ctx, d.domain.toString()) !== null) {
-			throw Error("Tenant by such domain is already taken");
+	export async function update(ctx: LandlordContext, id: string, d: TenantsUpdate) {
+		if (
+			d.domain &&
+			(await ctx.db.query.tenants.findFirst({
+				where: and(not(eq(tenants.id, id)), eq(tenants.domain, d.domain)),
+			}))
+		) {
+			throw Error("Domain is already taken");
 		}
 
-		return await ctx.db
-			.update(tenants)
-			.set(d)
-			.where(eq(tenants.id, id))
-			.returning();
+		return await ctx.db.update(tenants).set(d).where(eq(tenants.id, id)).returning();
 	}
 
 	/**

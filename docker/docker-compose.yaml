@@ -1,30 +1,30 @@
 ---
 name: my-project-name
 services:
-    db:
-        container_name: ${APP_NAME:-myapp}_DB
-        image: postgres:16-alpine
-        restart: on-failure:5
-        environment:
-            POSTGRES_USER: ${DB_USER:-root}
-            POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
-            POSTGRES_DB: ${DB_NAME:-landlord}
-        volumes:
-            - postgres_data:/var/lib/postgresql/data
-        ports:
-            - "${DB_PORT:-5432}:5432"
-        networks:
-            - backend
-    redis:
-        image: redis:alpine
-        container_name: ${APP_NAME:-myapp}_REDIS
-        command: redis-server --appendonly yes
-        volumes:
-            - redis_data:/data
-        ports:
-            - "${REDIS_PORT:-6379}:6379"
-        networks:
-            - backend
+  db:
+    container_name: ${APP_NAME:-myapp}_DB
+    image: postgres:16-alpine
+    restart: on-failure:5
+    environment:
+      POSTGRES_USER: ${DB_USER:-root}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+      POSTGRES_DB: ${DB_NAME:-landlord}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    networks:
+      - backend
+  redis:
+    image: redis:alpine
+    container_name: ${APP_NAME:-myapp}_REDIS
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    networks:
+      - backend
 
 networks:
   backend:

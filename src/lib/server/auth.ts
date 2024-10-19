@@ -14,10 +14,7 @@ import { eq } from "drizzle-orm";
 import { sessions, users } from "@/db/schemas/shared";
 import type { Sessions } from "@/db/schemas/shared";
 import type { User } from "./tenancy";
-import {
-	encodeBase32LowerCaseNoPadding,
-	encodeHexLowerCase,
-} from "@oslojs/encoding";
+import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from "@oslojs/encoding";
 import type { Cookies, RequestEvent } from "@sveltejs/kit";
 
 // ============================================================================
@@ -60,9 +57,7 @@ export namespace Auth {
 	/** The length of the verification code. */
 	export const VERIFICATION_CODE_LENGTH = 8;
 	/** The length of a valid session. */
-	export const SESSION_EXPIRES = new Date(
-		Date.now() + 1000 * 60 * 60 * 24 * 30,
-	);
+	export const SESSION_EXPIRES = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
 	/** The session cookie name */
 	export const SESSION_COOKIE = "session";
 
@@ -93,7 +88,7 @@ export namespace Auth {
 	export async function createSession(
 		ctx: TenancyContext,
 		token: string,
-		userId: string,
+		userId: string
 	): Promise<Sessions> {
 		const session: Sessions = {
 			userId,
@@ -113,7 +108,7 @@ export namespace Auth {
 	 */
 	export async function validateSessionToken(
 		ctx: TenancyContext,
-		token: string,
+		token: string
 	): Promise<SessionValidationResult> {
 		const sessionId = hasher.update(token).digest().toString("base64");
 		const result = await ctx.db
@@ -156,10 +151,7 @@ export namespace Auth {
 	 * @param ctx
 	 * @param sessionId
 	 */
-	export async function invalidateSessions(
-		ctx: TenancyContext,
-		userId: string,
-	) {
+	export async function invalidateSessions(ctx: TenancyContext, userId: string) {
 		await ctx.db.delete(sessions).where(eq(sessions.userId, userId));
 	}
 
@@ -191,19 +183,10 @@ export namespace Auth {
 	 * @param email The user's email.
 	 * @returns The verification code.
 	 */
-	export async function createVerificationCode(
-		ctx: TenancyContext,
-		userId: string,
-		email: string,
-	) {
+	export async function createVerificationCode(ctx: TenancyContext, userId: string, email: string) {
 		return await ctx.db.transaction(async (tx) => {
-			await tx
-				.delete(verificationTokens)
-				.where(eq(verificationTokens.userId, userId));
-			const code = generateRandomString(
-				VERIFICATION_CODE_LENGTH,
-				alphabet("0-9"),
-			);
+			await tx.delete(verificationTokens).where(eq(verificationTokens.userId, userId));
+			const code = generateRandomString(VERIFICATION_CODE_LENGTH, alphabet("0-9"));
 
 			await tx.insert(verificationTokens).values({
 				expiresAt: createDate(new TimeSpan(5, "m")),
@@ -228,7 +211,7 @@ export namespace Auth {
 		cookies: Cookies,
 		token: string,
 		expiresAt: Date = SESSION_EXPIRES,
-		domain?: string,
+		domain?: string
 	) {
 		cookies.set(SESSION_COOKIE, token, {
 			httpOnly: true,

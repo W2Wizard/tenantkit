@@ -56,7 +56,7 @@ const handleTenant: Handle = async ({ event, resolve }) => {
 		key: string,
 		uri: string,
 		type: "landlord" | "tenant",
-		tenant?: landlordSchema.TenantsType,
+		tenant?: landlordSchema.TenantsType
 	) => {
 		if (!connections.has(key)) {
 			const schema =
@@ -87,11 +87,7 @@ const handleTenant: Handle = async ({ event, resolve }) => {
 	}
 
 	// NOTE: We always ensure a landlord connection no matter what.
-	const landlord = retrieveContext(
-		"landlord",
-		DB_URL,
-		"landlord",
-	) as LandlordContext;
+	const landlord = retrieveContext("landlord", DB_URL, "landlord") as LandlordContext;
 	if (!landlord) {
 		error(503, "Landlord is unavailble");
 	} else if (parts.length === 1) {
@@ -102,12 +98,7 @@ const handleTenant: Handle = async ({ event, resolve }) => {
 	const tenant = await Tenants.fromDomain(landlord, event.url);
 	if (!tenant) error(404);
 
-	event.locals.context = retrieveContext(
-		event.url.hostname,
-		tenant.dbUri,
-		"tenant",
-		tenant,
-	);
+	event.locals.context = retrieveContext(event.url.hostname, tenant.dbUri, "tenant", tenant);
 	return resolve(event);
 };
 
@@ -134,10 +125,7 @@ export const handleAuth: Handle = async ({ event, resolve }) => {
 
 		// User is trying to sign in OR
 		// Allow non-authenticated access if the route doesn't require authentication
-		if (
-			routes[event.url.pathname] === false ||
-			event.url.pathname.startsWith("/auth")
-		) {
+		if (routes[event.url.pathname] === false || event.url.pathname.startsWith("/auth")) {
 			return resolve(event);
 		}
 		// If route requires authentication and no session exists, redirect to signin
@@ -145,19 +133,12 @@ export const handleAuth: Handle = async ({ event, resolve }) => {
 	}
 
 	// Validate & Create session
-	const [r, e] = await ensure(
-		Auth.validateSessionToken(event.locals.context, token),
-	);
+	const [r, e] = await ensure(Auth.validateSessionToken(event.locals.context, token));
 	if (e) error(503, e.message);
 	const { session, user } = r;
 
 	if (session !== null) {
-		Auth.setCookie(
-			event.cookies,
-			token,
-			session.expiresAt,
-			event.locals.context.domain,
-		);
+		Auth.setCookie(event.cookies, token, session.expiresAt, event.locals.context.domain);
 
 		event.locals.user = user;
 		event.locals.session = session;
@@ -166,10 +147,7 @@ export const handleAuth: Handle = async ({ event, resolve }) => {
 	}
 
 	// Landlord application must only have access to the landlord route
-	if (
-		!event.url.pathname.startsWith("/landlord") &&
-		event.locals.context.type === "landlord"
-	) {
+	if (!event.url.pathname.startsWith("/landlord") && event.locals.context.type === "landlord") {
 		redirect(303, "/landlord");
 	}
 

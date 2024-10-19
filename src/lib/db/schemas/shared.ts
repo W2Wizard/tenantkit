@@ -26,7 +26,7 @@ import {
 
 // ============================================================================
 
-export type InferUpdateModel<T extends PgTable> = PgUpdateSetSource<T>
+export type InferUpdateModel<T extends PgTable> = PgUpdateSetSource<T>;
 
 // Sessions for authentication
 export const sessions = pgTable("sessions", {

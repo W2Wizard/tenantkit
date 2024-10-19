@@ -1,25 +1,25 @@
 <script lang="ts">
-import { Calendar } from "lucide-svelte";
-import type { DateRange } from "bits-ui";
-import {
-	CalendarDate,
-	DateFormatter,
-	type DateValue,
-	getLocalTimeZone,
-} from "@internationalized/date";
-import { cn } from "$lib/utils.js";
-import { Button } from "$lib/components/ui/button/index.js";
-import { RangeCalendar } from "$lib/components/ui/range-calendar/index.js";
-import * as Popover from "$lib/components/ui/popover/index.js";
+	import { Calendar } from "lucide-svelte";
+	import type { DateRange } from "bits-ui";
+	import {
+		CalendarDate,
+		DateFormatter,
+		type DateValue,
+		getLocalTimeZone,
+	} from "@internationalized/date";
+	import { cn } from "$lib/utils.js";
+	import { Button } from "$lib/components/ui/button/index.js";
+	import { RangeCalendar } from "$lib/components/ui/range-calendar/index.js";
+	import * as Popover from "$lib/components/ui/popover/index.js";
 
-interface Props {
-	value: DateRange | undefined;
-}
+	interface Props {
+		value: DateRange | undefined;
+	}
 
-let { value = $bindable(undefined) }: Props = $props();
-const df = new DateFormatter("en-US", {
-	dateStyle: "medium",
-});
+	let { value = $bindable(undefined) }: Props = $props();
+	const df = new DateFormatter("en-US", {
+		dateStyle: "medium",
+	});
 </script>
 
 <div class="grid gap-2">

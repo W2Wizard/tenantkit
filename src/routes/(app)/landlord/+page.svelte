@@ -1,10 +1,5 @@
 <script lang="ts">
-	import {
-		CirclePlus,
-		File,
-		UsersRound,
-		MessageSquareWarning,
-	} from "lucide-svelte/icons";
+	import { CirclePlus, File, UsersRound, MessageSquareWarning } from "lucide-svelte/icons";
 	import { Badge } from "$lib/components/ui/badge/index.js";
 	import { Button } from "$lib/components/ui/button/index.js";
 	import * as Card from "$lib/components/ui/card/index.js";
@@ -33,8 +28,7 @@
 
 	let pageState: PaginationState;
 
-	const loadTenants = async () =>
-		($tenants = await Promise.resolve(data.tenants));
+	const loadTenants = async () => ($tenants = await Promise.resolve(data.tenants));
 </script>
 
 <div class="flex items-center">
@@ -43,9 +37,7 @@
 			<Popover.Trigger asChild let:builder>
 				<Button builders={[builder]} size="sm" class="h-7 gap-1">
 					<CirclePlus class="h-3.5 w-3.5" />
-					<span class="sr-only sm:not-sr-only sm:whitespace-nowrap">
-						Add Tenant
-					</span>
+					<span class="sr-only sm:not-sr-only sm:whitespace-nowrap"> Add Tenant </span>
 				</Button>
 			</Popover.Trigger>
 			<Popover.Content class="w-80">
@@ -57,18 +49,13 @@
 					<div class="space-y-2">
 						<h4 class="font-medium leading-none">Tenant</h4>
 						<p class="text-muted-foreground text-sm">
-							Create a new tenant, upon saving a new database will created and
-							the tenant is available.
+							Create a new tenant, upon saving a new database will created and the tenant is
+							available.
 						</p>
 					</div>
 					<div class="grid grid-cols-3 items-center gap-4">
 						<Label for="width">Name</Label>
-						<Input
-							id="width"
-							name="name"
-							placeholder="New Tenant"
-							class="col-span-2 h-8"
-						/>
+						<Input id="width" name="name" placeholder="New Tenant" class="col-span-2 h-8" />
 					</div>
 					<Separator class="my-2" />
 					<Button type="submit">Save changes</Button>
@@ -102,8 +89,7 @@
 					<UsersRound class="size-4" />
 					<Alert.Title>No tenants</Alert.Title>
 					<Alert.Description>
-						At the moment you have no available tenants to manage. Feel free to
-						add one.
+						At the moment you have no available tenants to manage. Feel free to add one.
 					</Alert.Description>
 				</Alert.Root>
 			{:else}
@@ -123,10 +109,7 @@
 </Card.Root>
 
 <!-- Edit tenant sheet -->
-<Sheet.Root
-	open={$tenant !== null}
-	onOpenChange={(v) => ($tenant = v ? $tenant : null)}
->
+<Sheet.Root open={$tenant !== null} onOpenChange={(v) => ($tenant = v ? $tenant : null)}>
 	<Sheet.Content side="right">
 		<Sheet.Header title="Edit Tenant">
 			<Sheet.Description>Set Tenant data</Sheet.Description>
@@ -135,33 +118,16 @@
 			{#if $tenant}
 				<div class="flex flex-col gap-2 items-start">
 					<Label for="id" class="text-right">Id</Label>
-					<Input
-						id="id"
-						name="id"
-						readonly
-						inert
-						value={$tenant.id}
-						class="col-span-3"
-					/>
+					<Input id="id" name="id" readonly inert value={$tenant.id} class="col-span-3" />
 				</div>
 				<div class="flex flex-col gap-2 items-start">
 					<Label for="name" class="text-right">Name</Label>
-					<Input
-						id="name"
-						name="name"
-						value={$tenant.name}
-						class="col-span-3"
-					/>
+					<Input id="name" name="name" value={$tenant.name} class="col-span-3" />
 				</div>
 				<div class="flex flex-col gap-2 items-start">
 					<Label for="domain" class="text-right">Domain</Label>
 					<div class="flex w-full gap-2 items-center">
-						<Input
-							id="domain"
-							name="domain"
-							value={$tenant.domain}
-							class="col-span-3 flex-1"
-						/>
+						<Input id="domain" name="domain" value={$tenant.domain} class="col-span-3 flex-1" />
 						<span>.{PUBLIC_APP_DOMAIN}</span>
 					</div>
 				</div>

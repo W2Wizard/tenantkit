@@ -1,10 +1,10 @@
 <script>
-import Form from "@/components/form.svelte";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+	import Form from "@/components/form.svelte";
+	import { Button } from "@/components/ui/button";
+	import { Input } from "@/components/ui/input";
+	import { Label } from "@/components/ui/label";
 
-let { data } = $props();
+	let { data } = $props();
 </script>
 
 {#snippet resetPassword()}

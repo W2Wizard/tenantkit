@@ -13,9 +13,7 @@ import { env } from "$env/dynamic/private";
 
 // ============================================================================
 
-export const load: PageServerLoad = async ({
-	locals: { context, session },
-}) => {
+export const load: PageServerLoad = async ({ locals: { context, session } }) => {
 	if (session) return redirect(302, "/");
 
 	return {
@@ -36,18 +34,12 @@ export const actions: Actions = {
 		// Wait a random 25 - 400 ms to prevent timing attacks
 		// Returning immediately allows malicious actors to figure out valid usernames from response times
 		// By always returning the same / inconsistent response time, we can make it harder to figure out valid usernames
-		await new Promise((resolve) =>
-			setTimeout(resolve, 25 + Math.random() * 400),
-		);
+		await new Promise((resolve) => setTimeout(resolve, 25 + Math.random() * 400));
 
 		if (!email || !password) {
 			return Toasty.fail(422, "Invalid email or password");
 		}
-		if (
-			email.length < 3 ||
-			email.length > 255 ||
-			!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-		) {
+		if (email.length < 3 || email.length > 255 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
 			return Toasty.fail(422, "Invalid email or password");
 		}
 
@@ -61,11 +53,7 @@ export const actions: Actions = {
 			return Toasty.fail(422, "Invalid email or password");
 		}
 
-		const validPassword = await Bun.password.verify(
-			password,
-			user.hash,
-			"argon2id",
-		);
+		const validPassword = await Bun.password.verify(password, user.hash, "argon2id");
 		if (!validPassword) {
 			return Toasty.fail(422, "Invalid email or password");
 		}

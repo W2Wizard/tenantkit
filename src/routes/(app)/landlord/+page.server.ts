@@ -46,15 +46,19 @@ export const actions: Actions = {
 	update: async (event) => {
 		const { evt, form } = await validateEventForm(event, updateSchema);
 		if (!form.success) {
-			console.log(form.error.issues)
+			console.log(form.error.issues);
 			return Toasty.bad(400, form.error.issues);
 		}
 
-		const { locals: { context }} = evt;
-		const [_, e] = await ensure(Tenants.update(context, form.data.id, {
-			name: form.data.name,
-			domain: form.data.domain,
-		}));
+		const {
+			locals: { context },
+		} = evt;
+		const [_, e] = await ensure(
+			Tenants.update(context, form.data.id, {
+				name: form.data.name,
+				domain: form.data.domain,
+			})
+		);
 
 		if (e) return Toasty.fail(422, e.message);
 		return Toasty.success("Tenant updated");
@@ -65,7 +69,9 @@ export const actions: Actions = {
 			return Toasty.bad(400, form.error.issues);
 		}
 
-		const { locals: { context }} = evt;
+		const {
+			locals: { context },
+		} = evt;
 		const [r, e] = await ensure(Tenants.remove(context, form.data.id));
 		if (e) return Toasty.fail(422, e.message);
 		return Toasty.success(`Tenant: ${r!.domain} has been deleted`);
@@ -76,7 +82,9 @@ export const actions: Actions = {
 			return Toasty.bad(400, form.error.issues);
 		}
 
-		const { locals: { context }} = evt;
+		const {
+			locals: { context },
+		} = evt;
 		const [r, e] = await ensure(Tenants.create(context, form.data.name));
 		if (e) return Toasty.fail(400, e.message);
 		return Toasty.success("Tenant created");

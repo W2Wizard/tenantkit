@@ -1,8 +1,8 @@
 <script lang="ts">
-import * as Card from "$lib/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+	import * as Card from "$lib/components/ui/card";
+	import { Skeleton } from "@/components/ui/skeleton";
 
-const { data } = $props();
+	const { data } = $props();
 </script>
 
 <div class="relative flex-1">

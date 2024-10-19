@@ -22,10 +22,7 @@ const limiter = useRetryAfter({
 // ============================================================================
 
 export const load: PageServerLoad = async ({ url, locals }) => {
-	if (
-		Boolean(env.AUTH_FORGOT) === false ||
-		locals.context.type === "landlord"
-	) {
+	if (Boolean(env.AUTH_FORGOT) === false || locals.context.type === "landlord") {
 		error(404);
 	}
 
@@ -61,13 +58,10 @@ export const actions: Actions = {
 
 		const formData = await event.request.formData();
 		const email = formData.get("email")?.toString();
-		const message =
-			"If your email exists / is verified, you will receive a password reset link";
+		const message = "If your email exists / is verified, you will receive a password reset link";
 
 		// Wait a random 125 - 250 ms to prevent timing attacks
-		await new Promise((resolve) =>
-			setTimeout(resolve, 125 + Math.random() * 125),
-		);
+		await new Promise((resolve) => setTimeout(resolve, 125 + Math.random() * 125));
 
 		if (
 			!email ||
@@ -118,10 +112,7 @@ export const actions: Actions = {
 
 		// const password = password1;
 		if (!password || password.length < 8) {
-			return Toasty.fail(
-				400,
-				"Invalid password, must be at least 8 characters.",
-			);
+			return Toasty.fail(400, "Invalid password, must be at least 8 characters.");
 		}
 
 		// Verify the token
@@ -132,10 +123,7 @@ export const actions: Actions = {
 			.limit(1);
 		const token = tokens.at(0);
 
-		if (token)
-			await locals.context.db
-				.delete(resetTokens)
-				.where(eq(resetTokens.id, token.id));
+		if (token) await locals.context.db.delete(resetTokens).where(eq(resetTokens.id, token.id));
 		if (!token || !isWithinExpirationDate(new Date(token.expiresAt))) {
 			error(400, "Invalid token");
 		}

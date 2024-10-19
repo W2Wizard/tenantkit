@@ -73,12 +73,9 @@ export function useRetryAfter(
 		IP: [15, "h"] as Rate,
 		/** IP + User-Agent e.g: Firefox, Chrome, etc */
 		IPUA: [5, "m"] as Rate,
-	},
+	}
 ) {
-	const maxTTL = Math.max(
-		RateUnitMap[options.IP[1]],
-		RateUnitMap[options.IPUA[1]],
-	);
+	const maxTTL = Math.max(RateUnitMap[options.IP[1]], RateUnitMap[options.IPUA[1]]);
 	const cache = new RateLimiter(maxTTL, Infinity);
 
 	async function isLimited(event: RequestEvent) {

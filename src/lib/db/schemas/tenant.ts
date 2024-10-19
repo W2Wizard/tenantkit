@@ -3,15 +3,7 @@
 // See README in the root project for more information.
 // ============================================================================
 
-import {
-	integer,
-	json,
-	pgEnum,
-	text,
-	timestamp,
-	uuid,
-	varchar,
-} from "drizzle-orm/pg-core";
+import { integer, json, pgEnum, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { declareTable, joinTable } from "../utils";
 import { relations, sql } from "drizzle-orm";
 export * from "./shared";
@@ -23,7 +15,10 @@ export const navigationItems = declareTable("navigation_items", {
 	groupId: uuid("group_id").references(() => navigationGroups.id),
 	order: integer("order"),
 	href: varchar("href", { length: 256 }).notNull(),
-	permissions: text("permissions").array().notNull().default(sql`'{}'::text[]`),
+	permissions: text("permissions")
+		.array()
+		.notNull()
+		.default(sql`'{}'::text[]`),
 });
 
 export const navigationGroups = declareTable("navigation_groups", {

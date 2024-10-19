@@ -29,16 +29,12 @@ type FlyAndScaleParams = {
 
 export const flyAndScale = (
 	node: Element,
-	params: FlyAndScaleParams = { y: -8, x: 0, start: 0.95, duration: 150 },
+	params: FlyAndScaleParams = { y: -8, x: 0, start: 0.95, duration: 150 }
 ): TransitionConfig => {
 	const style = getComputedStyle(node);
 	const transform = style.transform === "none" ? "" : style.transform;
 
-	const scaleConversion = (
-		valueA: number,
-		scaleA: [number, number],
-		scaleB: [number, number],
-	) => {
+	const scaleConversion = (valueA: number, scaleA: [number, number], scaleB: [number, number]) => {
 		const [minA, maxA] = scaleA;
 		const [minB, maxB] = scaleB;
 
@@ -48,9 +44,7 @@ export const flyAndScale = (
 		return valueB;
 	};
 
-	const styleToString = (
-		style: Record<string, number | string | undefined>,
-	): string => {
+	const styleToString = (style: Record<string, number | string | undefined>): string => {
 		return Object.keys(style).reduce((str, key) => {
 			if (style[key] === undefined) return str;
 			return str + `${key}:${style[key]};`;
@@ -132,7 +126,7 @@ export async function useFileReader(file: File) {
 export namespace API {
 	export async function fetchy<T = unknown>(
 		route: string,
-		init?: RequestInit & { fetch?: typeof fetch },
+		init?: RequestInit & { fetch?: typeof fetch }
 	) {
 		const fetchy = init?.fetch ?? fetch;
 		const response = await fetchy(route, {
@@ -230,11 +224,7 @@ export namespace Toasty {
 	 * @param message The message of the failure
 	 * @returns
 	 */
-	export function fail<T>(
-		status: number,
-		message: string,
-		rest: T = undefined as T,
-	) {
+	export function fail<T>(status: number, message: string, rest: T = undefined as T) {
 		return kitFail(status, { message, ...rest });
 	}
 
@@ -271,9 +261,7 @@ export namespace Toasty {
  * @param promise The promise to ensure / await.
  * @returns Either the result or an error.
  */
-export async function ensure<T, E = Error>(
-	promise: Promise<T>,
-): Promise<[T, null] | [null, E]> {
+export async function ensure<T, E = Error>(promise: Promise<T>): Promise<[T, null] | [null, E]> {
 	try {
 		const result = await promise;
 		return [result, null];

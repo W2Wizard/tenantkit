@@ -1,13 +1,13 @@
 <script lang="ts">
-import type { Snippet } from "svelte";
-import * as Tooltip from "./index";
+	import type { Snippet } from "svelte";
+	import * as Tooltip from "./index";
 
-interface Props {
-	children?: Snippet;
-	text: string;
-}
+	interface Props {
+		children?: Snippet;
+		text: string;
+	}
 
-const { children, text }: Props = $props();
+	const { children, text }: Props = $props();
 </script>
 
 <Tooltip.Root>

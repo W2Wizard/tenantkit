@@ -1,23 +1,17 @@
 <script lang="ts" generics="T">
-import type { TableViewModel } from "svelte-headless-table";
-import * as Select from "@/components/ui/select";
-import {
-	ChevronRight,
-	ChevronLeft,
-	ArrowRight,
-	ArrowLeft,
-} from "lucide-svelte";
-import { Button } from "@/components/ui/button";
-import type { defineTable } from ".";
+	import type { TableViewModel } from "svelte-headless-table";
+	import * as Select from "@/components/ui/select";
+	import { ChevronRight, ChevronLeft, ArrowRight, ArrowLeft } from "lucide-svelte";
+	import { Button } from "@/components/ui/button";
+	import type { defineTable } from ".";
 
-interface Props {
-	model: TableViewModel<T, ReturnType<typeof defineTable<T>>["plugins"]>;
-}
+	interface Props {
+		model: TableViewModel<T, ReturnType<typeof defineTable<T>>["plugins"]>;
+	}
 
-const { model }: Props = $props();
-const { pageRows, pluginStates, rows } = model;
-const { hasNextPage, hasPreviousPage, pageIndex, pageCount, pageSize } =
-	pluginStates.page;
+	const { model }: Props = $props();
+	const { pageRows, pluginStates, rows } = model;
+	const { hasNextPage, hasPreviousPage, pageIndex, pageCount, pageSize } = pluginStates.page;
 </script>
 
 <div class="flex items-center justify-between py-2">

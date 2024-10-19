@@ -28,10 +28,7 @@ export const load: PageServerLoad = async ({ locals, cookies }) => {
 		error(403);
 	}
 
-	const result = await locals.context.db
-		.select()
-		.from(users)
-		.where(eq(users.id, userId));
+	const result = await locals.context.db.select().from(users).where(eq(users.id, userId));
 	const user = result.at(0);
 	if (!user || user.id !== userId) {
 		cookies.delete(IDENTITY_COOKIE, { path: "/" });

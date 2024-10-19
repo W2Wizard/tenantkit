@@ -50,9 +50,7 @@
 			</DropdownMenu.Item>
 			<DropdownMenu.Separator />
 			<DropdownMenu.Item>
-				<button formaction="?/delete" class="p-0 bg-none w-full text-left">
-					Delete
-				</button>
+				<button formaction="?/delete" class="p-0 bg-none w-full text-left"> Delete </button>
 				<DropdownMenu.Shortcut>
 					<Trash2 class="h-4 w-4" />
 				</DropdownMenu.Shortcut>
