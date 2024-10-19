@@ -1,17 +1,31 @@
 <script lang="ts">
-import { Ellipsis, Pen, Trash2, Filter, Banknote } from "lucide-svelte/icons";
-import { Button } from "$lib/components/ui/button";
-import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
-import type { TenantsType } from "@/db/schemas/landlord";
-import { tenant } from "../state.svelte";
-import Form from "@/components/form.svelte";
-import { invalidate } from "$app/navigation";
+	import { Ellipsis, Pen, Trash2, Filter, Banknote } from "lucide-svelte/icons";
+	import { Button } from "$lib/components/ui/button";
+	import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
+	import type { TenantsType } from "@/db/schemas/landlord";
+	import { tenant } from "../state.svelte";
+	import Form from "@/components/form.svelte";
+	import { invalidate } from "$app/navigation";
+	import { dialog } from "@/components/dialog/state.svelte";
 
-interface Props {
-	selected: TenantsType;
-}
+	// Props
+	// ====================================================
 
-const { selected }: Props = $props();
+	interface Props {
+		selected: TenantsType;
+	}
+	const { selected }: Props = $props();
+
+	// Functions
+	// ====================================================
+
+	async function beforeSubmit() {
+		return await dialog.confirm();
+	}
+
+	function onResult() {
+		invalidate("landlord:tenants");
+	}
 </script>
 
 <DropdownMenu.Root>
@@ -26,8 +40,8 @@ const { selected }: Props = $props();
 		</Button>
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="w-[180px]" align="end">
-		<Form method="POST" beforeSubmit={() => confirm("Are you sure?")} onResult={() => invalidate("landlord:tenants")}>
-			<input hidden readonly name="id" value={selected.id}/>
+		<Form method="POST" {beforeSubmit} {onResult}>
+			<input hidden readonly name="id" value={selected.id} />
 			<DropdownMenu.Item on:click={() => ($tenant = selected)}>
 				Edit
 				<DropdownMenu.Shortcut>

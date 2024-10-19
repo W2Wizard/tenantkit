@@ -11,7 +11,7 @@ interface Props extends HTMLFormAttributes {
 	 * If for instance you want to confirm a submission.
 	 * If false no submit fetch is sent, else it will be submitted.
 	 */
-	beforeSubmit?: () => boolean;
+	beforeSubmit?: () => boolean | Promise<boolean>;
 	/**
 	 * Hook to check if the form is currently loading / awaiting a response.
 	 * @param isLoading True if is awaiting a response else false.
@@ -34,8 +34,9 @@ let {
 	...rest
 }: Props = $props();
 
-export const onSubmit: SubmitFunction = ({ cancel }) => {
-	if (beforeSubmit?.() === false) {
+export const onSubmit: SubmitFunction = async ({ cancel }) => {
+	const shouldSubmit = beforeSubmit ? await beforeSubmit() : true;
+	if (!shouldSubmit) {
 		return cancel();
 	}
 

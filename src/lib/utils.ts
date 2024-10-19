@@ -112,7 +112,7 @@ export function clientWritable<T>(initialValue: T) {
  * @param key The key of the context
  * @returns Functions to get and set the context
  */
-export function useContext<T>(key: any) {
+export function useContext<T>(key: unknown) {
 	return {
 		get: () => getContext<T>(key),
 		set: (value: T) => setContext(key, value),
@@ -182,6 +182,35 @@ export async function validate<
 	};
 }
 
+/**
+ * Wrapper for validating the event, and checking that the form data matches
+ * the schema.
+ *
+ * If user is rate limited they get a 401, if schema is bad you can check.
+ *
+ * @param event The Request event
+ * @param schema The schema to use for parsing
+ * @param type The nature of the request.
+ * @returns The event and validated schema.
+ */
+export async function validateEventForm<
+	E extends RequestEvent,
+	S extends z.ZodRawShape,
+	T extends "landlord" | "tenant" = "landlord",
+>(event: E, schema: z.ZodObject<S>, type?: T) {
+	const { request } = await validate(event, type ?? "landlord");
+	const formData = Object.fromEntries(await request.formData());
+	await schema.safeParseAsync(formData);
+	return {
+		evt: event as E & {
+			locals: {
+				context: T extends "landlord" ? LandlordContext : TenantContext;
+			};
+		},
+		form: await schema.safeParseAsync(formData),
+	};
+}
+
 export function slugify(str: string) {
 	return String(str)
 		.normalize("NFKD") // split accented characters into their base characters and diacritical marks
@@ -191,22 +220,6 @@ export function slugify(str: string) {
 		.replace(/[^a-z0-9 -]/g, "") // remove non-alphanumeric characters
 		.replace(/\s+/g, "-") // replace spaces with hyphens
 		.replace(/-+/g, "-"); // remove consecutive hyphens
-}
-
-export namespace FormSchema {
-	/**
-	 * Formats the issues into field, and message.
-	 * @param issues The issues to format
-	 * @returns
-	 */
-	export function formatErrors(issues: z.ZodIssue[]) {
-		return issues.map((error) => {
-			return {
-				field: error.path[0],
-				message: error.message,
-			};
-		});
-	}
 }
 
 /** Wrapper functions for handling universal toasts by awaited forms.*/
@@ -223,6 +236,23 @@ export namespace Toasty {
 		rest: T = undefined as T,
 	) {
 		return kitFail(status, { message, ...rest });
+	}
+
+	/**
+	 * Universal way to fail based on a bad schema
+	 * @param status The status code of the failure
+	 * @param message The message of the failure
+	 * @returns
+	 */
+	export function bad(status: number = 400, issues: z.ZodIssue[]) {
+		return kitFail(400, {
+			issues: issues.map((error) => {
+				return {
+					field: error.path[0],
+					message: error.message,
+				};
+			}),
+		});
 	}
 
 	/**

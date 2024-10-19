@@ -1,55 +1,44 @@
 <script lang="ts">
-import {
-	CirclePlus,
-	File,
-	UsersRound,
-	MessageSquareWarning,
-} from "lucide-svelte/icons";
+	import {
+		CirclePlus,
+		File,
+		UsersRound,
+		MessageSquareWarning,
+	} from "lucide-svelte/icons";
+	import { Badge } from "$lib/components/ui/badge/index.js";
+	import { Button } from "$lib/components/ui/button/index.js";
+	import * as Card from "$lib/components/ui/card/index.js";
+	import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
+	import { Input } from "$lib/components/ui/input/index.js";
+	import * as Sheet from "$lib/components/ui/sheet/index.js";
+	import * as Table from "$lib/components/ui/table/index.js";
+	import * as Tabs from "$lib/components/ui/tabs/index.js";
+	import * as Tooltip from "$lib/components/ui/tooltip/index.js";
+	import { type Icon } from "lucide-svelte";
+	import { type TenantsType } from "@/db/schemas/landlord";
+	import { tenant, tenants } from "./state.svelte";
+	import TenantTable from "./table/tenant-table.svelte";
+	import { Skeleton } from "@/components/ui/skeleton";
+	import type { PaginationState } from "svelte-headless-table/plugins";
+	import { Label } from "@/components/ui/label";
+	import * as Popover from "@/components/ui/popover";
+	import Form from "@/components/form.svelte";
+	import Separator from "@/components/ui/separator/separator.svelte";
+	import { invalidate } from "$app/navigation";
+	import * as Alert from "@/components/ui/alert";
+	import { PUBLIC_APP_DOMAIN } from "$env/static/public";
+	import { dialog } from "@/components/dialog";
 
-import { Badge } from "$lib/components/ui/badge/index.js";
-import { Button } from "$lib/components/ui/button/index.js";
-import * as Card from "$lib/components/ui/card/index.js";
-import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
-import { Input } from "$lib/components/ui/input/index.js";
-import * as Sheet from "$lib/components/ui/sheet/index.js";
-import * as Table from "$lib/components/ui/table/index.js";
-import * as Tabs from "$lib/components/ui/tabs/index.js";
-import * as Tooltip from "$lib/components/ui/tooltip/index.js";
-import { type Icon } from "lucide-svelte";
-import { type TenantsType } from "@/db/schemas/landlord";
-import { tenant, tenants } from "./state.svelte";
-import TenantTable from "./table/tenant-table.svelte";
-import { Skeleton } from "@/components/ui/skeleton";
-import type { PaginationState } from "svelte-headless-table/plugins";
-import { Label } from "@/components/ui/label";
-import * as Popover from "@/components/ui/popover";
-import Form from "@/components/form.svelte";
-import Separator from "@/components/ui/separator/separator.svelte";
-import { invalidate } from "$app/navigation";
-import * as Alert from "@/components/ui/alert";
-import { PUBLIC_APP_DOMAIN } from "$env/static/public";
-import { dialog } from "@/components/dialog/state.svelte";
+	const { data } = $props();
 
-const { data } = $props();
+	let pageState: PaginationState;
 
-let pageState: PaginationState;
-
-async function handle() {
-	console.log(
-		await dialog.confirm({
-			title: "HAHAH",
-			message: "YOOOOOOOOO",
-		}),
-	);
-}
-
-const loadTenants = async () =>
-	($tenants = await Promise.resolve(data.tenants));
+	const loadTenants = async () =>
+		($tenants = await Promise.resolve(data.tenants));
 </script>
 
 <div class="flex items-center">
 	<div class=" flex items-center gap-2">
-		<Button on:click={handle}>Alert</Button>
 		<Popover.Root>
 			<Popover.Trigger asChild let:builder>
 				<Button builders={[builder]} size="sm" class="h-7 gap-1">
@@ -92,6 +81,7 @@ const loadTenants = async () =>
 		</Button>
 	</div>
 </div>
+
 <Card.Root>
 	<Card.Header>
 		<Card.Title>Tenants</Card.Title>
@@ -138,11 +128,10 @@ const loadTenants = async () =>
 	onOpenChange={(v) => ($tenant = v ? $tenant : null)}
 >
 	<Sheet.Content side="right">
-		<Sheet.Header>
-			<Sheet.Title>Edit Tenant</Sheet.Title>
+		<Sheet.Header title="Edit Tenant">
 			<Sheet.Description>Set Tenant data</Sheet.Description>
 		</Sheet.Header>
-		<div class="grid gap-4 py-4">
+		<Form class="grid gap-4 py-4" action="?/update">
 			{#if $tenant}
 				<div class="flex flex-col gap-2 items-start">
 					<Label for="id" class="text-right">Id</Label>
@@ -150,16 +139,16 @@ const loadTenants = async () =>
 						id="id"
 						name="id"
 						readonly
-						disabled
+						inert
 						value={$tenant.id}
 						class="col-span-3"
 					/>
 				</div>
 				<div class="flex flex-col gap-2 items-start">
-					<Label for="domain" class="text-right">Name</Label>
+					<Label for="name" class="text-right">Name</Label>
 					<Input
-						id="domain"
-						name="domain"
+						id="name"
+						name="name"
 						value={$tenant.name}
 						class="col-span-3"
 					/>
@@ -177,12 +166,12 @@ const loadTenants = async () =>
 					</div>
 				</div>
 			{/if}
-		</div>
-		<Separator class="my-2" />
-		<Sheet.Footer>
-			<Sheet.Close asChild let:builder>
-				<Button builders={[builder]} type="submit">Save changes</Button>
-			</Sheet.Close>
-		</Sheet.Footer>
+			<Separator class="my-2" />
+			<Sheet.Footer>
+				<Button type="submit">Save changes</Button>
+				<!-- <Sheet.Close asChild let:builder>
+				</Sheet.Close> -->
+			</Sheet.Footer>
+		</Form>
 	</Sheet.Content>
 </Sheet.Root>

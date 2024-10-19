@@ -5,6 +5,8 @@
 
 import { text, varchar } from "drizzle-orm/pg-core";
 import { declareTable, joinTable, jwtEncoded } from "../utils";
+import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
+import type { InferUpdateModel } from "./shared";
 export * from "./shared";
 
 // Tables
@@ -16,4 +18,5 @@ export const tenants = declareTable("tenants", {
 	dbUri: jwtEncoded("db_uri").notNull(),
 });
 
-export type TenantsType = typeof tenants.$inferSelect;
+export type TenantsType = InferSelectModel<typeof tenants>;
+export type TenantsUpdate = InferUpdateModel<typeof tenants>;

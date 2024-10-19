@@ -65,7 +65,7 @@ const handleTenant: Handle = async ({ event, resolve }) => {
 					: { ...tenantSchema, ...sharedSchema };
 
 			// NOTE(W2): This is technically correct. Retrieve context can be used for both
-			const db = drizzle(postgres(uri, { max: 24 }), { schema }) as
+			const db = drizzle({ connection: { url: uri }, schema, logger: true }) as
 				| LandlordDB
 				| TenantDB;
 

@@ -12,6 +12,8 @@ import {
 	timestamp,
 	boolean,
 	uuid,
+	type PgUpdateSetSource,
+	PgTable,
 } from "drizzle-orm/pg-core";
 
 /**
@@ -23,6 +25,8 @@ import {
  */
 
 // ============================================================================
+
+export type InferUpdateModel<T extends PgTable> = PgUpdateSetSource<T>
 
 // Sessions for authentication
 export const sessions = pgTable("sessions", {
@@ -72,3 +76,4 @@ export const users = pgTable("users", {
 });
 
 export type UsersType = InferSelectModel<typeof users>;
+export type UsersUpdate = InferUpdateModel<UsersType>;
