@@ -41,7 +41,7 @@ const limiter = useRetryAfter({
  * route requires it. But you can overwrite the behaviour here.
  */
 const routes: Record<string, boolean> = {
-	"/demo": false,
+	"/shop": false,
 };
 
 // ============================================================================
@@ -65,7 +65,7 @@ const handleTenant: Handle = async ({ event, resolve }) => {
 					: { ...tenantSchema, ...sharedSchema };
 
 			// NOTE(W2): This is technically correct. Retrieve context can be used for both
-			const db = drizzle({ connection: { url: uri }, schema, logger: true }) as
+			const db = drizzle({ connection: { url: uri }, schema, logger: false }) as
 				| LandlordDB
 				| TenantDB;
 
@@ -147,10 +147,12 @@ export const handleAuth: Handle = async ({ event, resolve }) => {
 	}
 
 	// Landlord application must only have access to the landlord route
+	if (event.url.pathname.startsWith("/auth")) {
+		return resolve(event);
+	}
 	if (!event.url.pathname.startsWith("/landlord") && event.locals.context.type === "landlord") {
 		redirect(303, "/landlord");
 	}
-
 	return resolve(event);
 };
 

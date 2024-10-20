@@ -8,6 +8,7 @@ import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
 import { Input } from "$lib/components/ui/input/index.js";
 import * as Tooltip from "$lib/components/ui/tooltip/index.js";
 import { toggleMode } from "mode-watcher";
+import { Separator } from "@/components/ui/separator";
 
 const { children } = $props();
 </script>
@@ -19,8 +20,7 @@ const { children } = $props();
 				{href}
 				class="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
 				use:builder.action
-				{...builder}
-			>
+				{...builder}>
 				<Package2 class="h-4 w-4 transition-all group-hover:scale-110" />
 				<span class="sr-only">{text}</span>
 			</a>
@@ -37,17 +37,13 @@ const { children } = $props();
 	</aside>
 	<div class="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
 		<header
-			class="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6"
-		>
-			<div class="relative ml-auto flex-1">
-				<Search class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-				<Input type="search" placeholder="Search..." class="w-full rounded-lg bg-background pl-8" />
-			</div>
+			class="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+			<h1 class="relative ml-auto text-2xl">Tenants</h1>
+			<Separator class="relative ml-auto flex-1 text-2xl" />
 			<Button onclick={toggleMode} variant="outline" size="icon" class="rounded-lg">
 				<Sun class="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
 				<Moon
-					class="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
-				/>
+					class="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
 				<span class="sr-only">Toggle theme</span>
 			</Button>
 			<DropdownMenu.Root>
@@ -56,15 +52,13 @@ const { children } = $props();
 						builders={[builder]}
 						variant="outline"
 						size="icon"
-						class="overflow-hidden rounded-full"
-					>
+						class="overflow-hidden rounded-full">
 						<img
 							src="/avatar.png"
 							width={36}
 							height={36}
 							alt="Avatar"
-							class="overflow-hidden rounded-full"
-						/>
+							class="overflow-hidden rounded-full" />
 					</Button>
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content align="end">

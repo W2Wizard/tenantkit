@@ -3,13 +3,12 @@
 // See README in the root project for more information.
 // ============================================================================
 
-import { error } from "@sveltejs/kit";
-import type { Actions, PageServerLoad } from "./$types";
-import { tenants } from "@/db/schemas/landlord";
-import Tenants from "@/server/tenancy";
 import { z } from "zod";
+import { error } from "@sveltejs/kit";
+import Tenants from "@/server/tenancy";
+import { tenants } from "@/db/schemas/landlord";
+import type { Actions, PageServerLoad } from "./$types";
 import { ensure, Toasty, validateEventForm } from "@/utils";
-import { invalidate } from "$app/navigation";
 
 // ============================================================================
 

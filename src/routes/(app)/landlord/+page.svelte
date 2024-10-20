@@ -1,16 +1,9 @@
 <script lang="ts">
-import { CirclePlus, File, UsersRound, MessageSquareWarning } from "lucide-svelte/icons";
-import { Badge } from "$lib/components/ui/badge/index.js";
+import { CirclePlus, File, UsersRound, MessageSquareWarning, Search } from "lucide-svelte/icons";
 import { Button } from "$lib/components/ui/button/index.js";
 import * as Card from "$lib/components/ui/card/index.js";
-import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
 import { Input } from "$lib/components/ui/input/index.js";
 import * as Sheet from "$lib/components/ui/sheet/index.js";
-import * as Table from "$lib/components/ui/table/index.js";
-import * as Tabs from "$lib/components/ui/tabs/index.js";
-import * as Tooltip from "$lib/components/ui/tooltip/index.js";
-import { type Icon } from "lucide-svelte";
-import { type TenantsType } from "@/db/schemas/landlord";
 import { tenant, tenants } from "./state.svelte";
 import TenantTable from "./table/tenant-table.svelte";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -22,12 +15,8 @@ import Separator from "@/components/ui/separator/separator.svelte";
 import { invalidate } from "$app/navigation";
 import * as Alert from "@/components/ui/alert";
 import { PUBLIC_APP_DOMAIN } from "$env/static/public";
-import { dialog } from "@/components/dialog";
 
 const { data } = $props();
-
-let pageState: PaginationState;
-
 const loadTenants = async () => ($tenants = await Promise.resolve(data.tenants));
 </script>
 
@@ -44,8 +33,7 @@ const loadTenants = async () => ($tenants = await Promise.resolve(data.tenants))
 				<Form
 					class="grid gap-4"
 					action="?/create"
-					onResult={async () => await invalidate("landlord:tenants")}
-				>
+					onResult={async () => await invalidate("landlord:tenants")}>
 					<div class="space-y-2">
 						<h4 class="font-medium leading-none">Tenant</h4>
 						<p class="text-muted-foreground text-sm">
@@ -62,10 +50,10 @@ const loadTenants = async () => ($tenants = await Promise.resolve(data.tenants))
 				</Form>
 			</Popover.Content>
 		</Popover.Root>
-		<Button size="sm" variant="outline" class="h-7 gap-1">
+		<!-- <Button size="sm" variant="outline" class="h-7 gap-1">
 			<File class="h-3.5 w-3.5" />
 			<span class="sr-only sm:not-sr-only sm:whitespace-nowrap"> Export </span>
-		</Button>
+		</Button> -->
 	</div>
 </div>
 
@@ -114,7 +102,7 @@ const loadTenants = async () => ($tenants = await Promise.resolve(data.tenants))
 		<Sheet.Header title="Edit Tenant">
 			<Sheet.Description>Set Tenant data</Sheet.Description>
 		</Sheet.Header>
-		<Form class="grid gap-4 py-4" action="?/update">
+		<Form class="grid gap-4 py-4" action="?/update" onResult={() => invalidate("landlord:tenants")}>
 			{#if $tenant}
 				<div class="flex flex-col gap-2 items-start">
 					<Label for="id" class="text-right">Id</Label>

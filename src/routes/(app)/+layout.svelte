@@ -18,6 +18,7 @@ import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index";
 import { Input } from "$lib/components/ui/input/index";
 import * as Sheet from "$lib/components/ui/sheet/index";
 import { toggleMode } from "mode-watcher";
+import Form from "@/components/form.svelte";
 
 const { children } = $props();
 
@@ -161,11 +162,11 @@ const navItems = [
 					<DropdownMenu.Item href="/settings/account">Settings</DropdownMenu.Item>
 					<DropdownMenu.Item>Support</DropdownMenu.Item>
 					<DropdownMenu.Separator />
-					<form action="/auth/logout" method="post">
+					<Form action="/auth/logout" method="post">
 						<DropdownMenu.Item inset class="p-0">
 							<Button type="submit" variant="destructive" class="h-8 w-[100%]">Logout</Button>
 						</DropdownMenu.Item>
-					</form>
+					</Form>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
 		</header>

@@ -54,8 +54,7 @@ namespace Tenants {
 		const slug = slugify(name);
 		const dbName = `tenant_${slug.replaceAll("-", "_")}`;
 		const tenantURL = `postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${dbName}`;
-
-		if (Tenants.findByDomain(ctx, slug) !== null) {
+		if (await Tenants.findByDomain(ctx, slug)) {
 			throw Error("Tenant by such domain is already taken");
 		}
 
@@ -117,8 +116,10 @@ namespace Tenants {
 	 * @returns The tenant or undefined.
 	 */
 	export async function fromDomain(ctx: LandlordContext, domain: URL) {
+		console.log(domain)
+
 		return ctx.db.query.tenants.findFirst({
-			where: eq(tenants.domain, domain.hostname),
+			where: eq(tenants.domain, domain.hostname.split('.')[0]),
 		});
 	}
 }

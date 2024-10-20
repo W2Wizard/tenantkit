@@ -66,8 +66,8 @@ const columns = table.createColumns([
 	table.column({
 		accessor: (item) => item,
 		header: "",
-		//@ts-ignore Wait for svelte 5 release
 		cell: ({ value }) =>
+			//@ts-ignore Wait for svelte 5 release
 			createRender(DataTableActions, {
 				selected: value,
 			}),

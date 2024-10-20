@@ -4,7 +4,7 @@
 // ============================================================================
 
 import { createTable, type ReadOrWritable } from "svelte-headless-table";
-import { addPagination, addSortBy } from "svelte-headless-table/plugins";
+import { addPagination, addSortBy, addTableFilter } from "svelte-headless-table/plugins";
 
 // ============================================================================
 
@@ -18,6 +18,9 @@ export function defineTable<T>(data: ReadOrWritable<T[]>) {
 	return createTable(data, {
 		page: addPagination(),
 		sort: addSortBy(),
+		filter: addTableFilter({
+			fn: ({ filterValue, value }) => value.toLowerCase().includes(filterValue.toLowerCase()),
+		}),
 	});
 }
 

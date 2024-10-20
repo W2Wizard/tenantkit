@@ -1,12 +1,13 @@
 <script lang="ts" generics="T">
 import { createTable, Render, Subscribe, type TableViewModel } from "svelte-headless-table";
-import { ArrowUpDown } from "lucide-svelte/icons";
+import { ArrowUpDown, Search } from "lucide-svelte/icons";
 import type { Column, HeaderCell } from "svelte-headless-table";
 import { readable } from "svelte/store";
 import * as Table from "$lib/components/ui/table";
 import DataTablePagination from "./data-table-pagination.svelte";
 import type { BaseTable } from ".";
 import { Button } from "../../button";
+import { Input } from "../../input";
 
 interface Props {
 	table: BaseTable<T>;
@@ -16,8 +17,13 @@ interface Props {
 let { table, columns }: Props = $props();
 const model = table.createViewModel(columns);
 const { headerRows, pageRows, tableAttrs, tableBodyAttrs, pluginStates } = model;
+const { filterValue } = pluginStates.filter;
 </script>
 
+<div class="relative ml-auto flex-1">
+	<Search class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+	<Input type="search" placeholder="Search..." bind:value={$filterValue} class="w-80 rounded-lg bg-background pl-8" />
+</div>
 <div class="mt-4 w-full rounded-md border shadow-sm">
 	<Table.Root {...$tableAttrs}>
 		<Table.Header>
